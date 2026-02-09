@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Mail, MapPin, Globe } from 'lucide-react';
 
 const Contact: React.FC = () => {
+  useEffect(() => {
+    document.title = "Contact | NHSAST Space - Get in Touch";
+  }, []);
+
   return (
     <div className="pt-32 pb-20">
       <div className="container mx-auto px-6">
@@ -39,10 +43,10 @@ const Contact: React.FC = () => {
                 </div>
                 <div>
                   <h3 className="text-lg font-bold mb-1">Visit the School Website</h3>
-                  <a 
-                    href="http://www.enstsa.edu.dz/en/tronc-commun.php" 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
+                  <a
+                    href="http://www.enstsa.edu.dz/en/tronc-commun.php"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="text-gray-400 hover:text-accent-cyan transition-colors break-all"
                   >
                     http://www.enstsa.edu.dz/en/tronc-commun.php
@@ -64,7 +68,7 @@ const Contact: React.FC = () => {
                   <input type="text" className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent-cyan transition-colors" placeholder="Doe" />
                 </div>
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-400 mb-2">Email Address</label>
                 <input type="email" className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent-cyan transition-colors" placeholder="john@example.com" />

@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Target, Lightbulb, Heart, BookOpen, Layers, Cpu, Cog, Plane, Globe, Briefcase, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const About: React.FC = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    document.title = "About NHSAST | Excellence in Autonomous Systems";
+  }, []);
 
   const handleDiscoverClick = (specialtyId: string) => {
     navigate('/study-guide', { state: { mode: 'specs', specialty: specialtyId } });
@@ -52,20 +56,20 @@ const About: React.FC = () => {
         {/* Vision/Mission Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-32">
           {[
-            { 
-              icon: <Target className="w-10 h-10 text-accent-cyan" />, 
-              title: "Our Mission", 
-              desc: "To foster a community of innovators who apply their engineering skills in electronics, mechanics, and processing to autonomous projects." 
+            {
+              icon: <Target className="w-10 h-10 text-accent-cyan" />,
+              title: "Our Mission",
+              desc: "To foster a community of innovators who apply their engineering skills in electronics, mechanics, and processing to autonomous projects."
             },
-            { 
-              icon: <Lightbulb className="w-10 h-10 text-accent-purple" />, 
-              title: "Our Vision", 
-              desc: "To become a leading hub for student-led research in the region, contributing to national advancements in technology." 
+            {
+              icon: <Lightbulb className="w-10 h-10 text-accent-purple" />,
+              title: "Our Vision",
+              desc: "To become a leading hub for student-led research in the region, contributing to national advancements in technology."
             },
-            { 
-              icon: <BookOpen className="w-10 h-10 text-pink-500" />, 
-              title: "Academic Excellence", 
-              desc: "Supporting the rigorous curriculum of NHSAST by providing practical applications for classroom knowledge." 
+            {
+              icon: <BookOpen className="w-10 h-10 text-pink-500" />,
+              title: "Academic Excellence",
+              desc: "Supporting the rigorous curriculum of NHSAST by providing practical applications for classroom knowledge."
             }
           ].map((item, idx) => (
             <div key={idx} className="glass-panel p-8 rounded-2xl text-center">
@@ -89,31 +93,31 @@ const About: React.FC = () => {
           </div>
 
           <div className="glass-panel p-8 md:p-12 rounded-3xl border border-white/10 bg-white/5 relative overflow-hidden">
-             {/* Decorative background element */}
-             <div className="absolute top-0 right-0 w-64 h-64 bg-accent-purple/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2" />
-             
-             <div className="relative z-10 space-y-8 text-lg text-gray-300 leading-relaxed text-justify">
-                <p>
-                  Autonomous systems represent the pinnacle of modern engineering—machines capable of sensing, thinking, and acting without direct human intervention. From self-driving cars to interplanetary rovers, this field is reshaping our world. 
-                </p>
-                <p>
-                  NHSAST is committed to training the elite engineers who will drive this revolution. Our curriculum is rigorously designed to bridge the gap between abstract mathematical theory and real-world application, fostering a deep understanding of the complex interplay between hardware, software, and physical dynamics.
-                </p>
-                <p>
-                  Students embarking on this journey begin with a comprehensive Preparatory Cycle, mastering the fundamental languages of nature and logic: mathematics, physics, and computer science. Upon this bedrock, they advance to the Engineering Cycle, specializing in one of three cutting-edge domains: Autonomous Embedded Systems, Robotics & Autonomous Systems Design, or Unmanned Systems Navigation & Control.
-                </p>
-             </div>
+            {/* Decorative background element */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-accent-purple/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2" />
+
+            <div className="relative z-10 space-y-8 text-lg text-gray-300 leading-relaxed text-justify">
+              <p>
+                Autonomous systems represent the pinnacle of modern engineering—machines capable of sensing, thinking, and acting without direct human intervention. From self-driving cars to interplanetary rovers, this field is reshaping our world.
+              </p>
+              <p>
+                NHSAST is committed to training the elite engineers who will drive this revolution. Our curriculum is rigorously designed to bridge the gap between abstract mathematical theory and real-world application, fostering a deep understanding of the complex interplay between hardware, software, and physical dynamics.
+              </p>
+              <p>
+                Students embarking on this journey begin with a comprehensive Preparatory Cycle, mastering the fundamental languages of nature and logic: mathematics, physics, and computer science. Upon this bedrock, they advance to the Engineering Cycle, specializing in one of three cutting-edge domains: Autonomous Embedded Systems, Robotics & Autonomous Systems Design, or Unmanned Systems Navigation & Control.
+              </p>
+            </div>
           </div>
         </div>
 
         {/* Specialized Tracks Section */}
         <div className="mb-20">
           <h2 className="text-4xl font-display font-bold mb-16 text-center">Our Specialized Tracks</h2>
-          
+
           <div className="space-y-24">
             {specialties.map((spec, index) => (
               <div key={spec.id} className={`flex flex-col ${index % 2 === 1 ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-12 items-start`}>
-                
+
                 {/* Info Column */}
                 <div className="flex-1 space-y-8">
                   <div className="flex items-center gap-4">
@@ -127,7 +131,7 @@ const About: React.FC = () => {
                     <p className="border-l-2 border-white/10 pl-6">
                       {spec.description}
                     </p>
-                    
+
                     <div className="bg-white/5 rounded-xl p-6 border border-white/5">
                       <h4 className="flex items-center gap-2 text-white font-bold mb-3">
                         <Globe className={`text-${spec.color}`} size={20} /> Real World Applications
@@ -143,7 +147,7 @@ const About: React.FC = () => {
                     </div>
 
                     <div className="pt-4">
-                      <button 
+                      <button
                         onClick={() => handleDiscoverClick(spec.id)}
                         className={`w-full md:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-${spec.color}/20 to-${spec.color}/10 border border-${spec.color}/30 text-white font-bold hover:scale-105 transition-all flex items-center justify-center gap-3 group`}
                       >
@@ -156,13 +160,13 @@ const About: React.FC = () => {
 
                 {/* Decorative Visual Column (could be an image in real app) */}
                 <div className="w-full lg:w-1/3 relative hidden lg:block h-[500px]">
-                   <div className="absolute inset-0 bg-gradient-to-b from-transparent to-space-900 z-10" />
-                   <div className={`w-full h-full rounded-2xl bg-${spec.color}/5 border border-${spec.color}/10 relative overflow-hidden`}>
-                      <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-${spec.color}/20 rounded-full blur-[80px] animate-pulse-slow`} />
-                      <div className="absolute inset-0 flex items-center justify-center opacity-20">
-                        {React.cloneElement(spec.icon as React.ReactElement<any>, { size: 120 })}
-                      </div>
-                   </div>
+                  <div className="absolute inset-0 bg-gradient-to-b from-transparent to-space-900 z-10" />
+                  <div className={`w-full h-full rounded-2xl bg-${spec.color}/5 border border-${spec.color}/10 relative overflow-hidden`}>
+                    <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-${spec.color}/20 rounded-full blur-[80px] animate-pulse-slow`} />
+                    <div className="absolute inset-0 flex items-center justify-center opacity-20">
+                      {React.cloneElement(spec.icon as React.ReactElement<any>, { size: 120 })}
+                    </div>
+                  </div>
                 </div>
 
               </div>

@@ -65,6 +65,10 @@ const StatCard: React.FC<{ value: string; label: string; icon: React.ReactNode }
 };
 
 const Home: React.FC = () => {
+  useEffect(() => {
+    document.title = "NHSAST Space | Home - Excellence in Autonomous Systems";
+  }, []);
+
   return (
     <div className="relative">
       {/* Hero Section */}

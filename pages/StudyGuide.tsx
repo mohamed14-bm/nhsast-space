@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { 
-  BookOpen, 
-  FileText, 
-  Video, 
-  PenTool, 
-  ChevronRight, 
-  ArrowLeft, 
-  GraduationCap, 
+import {
+  BookOpen,
+  FileText,
+  Video,
+  PenTool,
+  ChevronRight,
+  ArrowLeft,
+  GraduationCap,
   Calendar,
   Library,
   Cpu,
@@ -42,7 +42,7 @@ interface Module {
   code?: string;
   coeff: number; // Kept in interface but not rendered
   credits: number; // Kept in interface but not rendered
-  objectives?: string; 
+  objectives?: string;
   icon?: React.ReactNode;
 }
 
@@ -72,43 +72,43 @@ const studyData: Record<CycleId, CycleData> = {
         id: 's1',
         title: 'Semester 1 (CP1)',
         modules: [
-          { 
+          {
             id: 'math1', name: 'Analysis 1', code: 'MATH1', coeff: 5, credits: 5,
             objectives: 'Real numbers, sequences, limits, continuity, differentiability, and expansion formulations.'
           },
-          { 
+          {
             id: 'alg1', name: 'Algebra 1', code: 'MATH2', coeff: 4, credits: 4,
             objectives: 'Logic, sets, maps, algebraic structures (groups, rings, fields), polynomials, and rational fractions.'
           },
-          { 
+          {
             id: 'stat1', name: 'Probability and Statistics', code: 'STAT1', coeff: 4, credits: 4,
             objectives: 'Descriptive statistics, probability spaces, conditional probability, and random variables.'
           },
-          { 
+          {
             id: 'phys1', name: 'Physics 1 (Mechanics)', code: 'PHYS1', coeff: 5, credits: 5,
             objectives: 'Kinematics, dynamics of point masses, work, energy, and momentum conservation laws.'
           },
-          { 
+          {
             id: 'chem1', name: 'Chemistry 1', code: 'CHEM1', coeff: 4, credits: 4,
             objectives: 'Structure of matter, atomistic theory, periodic table, chemical bonding, and molecular structure.'
           },
-          { 
+          {
             id: 'info1', name: 'Introduction to Programming', code: 'INFO1', coeff: 4, credits: 4,
             objectives: 'Introduction to algorithmic thinking, variables, loops, arrays, and basic programming logic.'
           },
-          { 
+          {
             id: 'tech1', name: 'Technical Drawing', code: 'TECH1', coeff: 1, credits: 1,
             objectives: 'Fundamentals of technical drawing, projections, and standard engineering representations.'
           },
-          { 
+          {
             id: 'foss', name: 'Free and Open-Source Software', code: 'FOSS', coeff: 1, credits: 1,
             objectives: 'Introduction to FOSS philosophy, licensing, and usage of open-source tools in engineering.'
           },
-          { 
+          {
             id: 'hist1', name: 'History of Algeria 1', code: 'HIST1', coeff: 1, credits: 1,
             objectives: 'Historical context and key events in the history of Algeria.'
           },
-          { 
+          {
             id: 'eng1', name: 'English 1', code: 'LANG1', coeff: 1, credits: 1,
             objectives: 'Technical English vocabulary, reading comprehension of scientific texts, and basic communication skills.'
           },
@@ -118,43 +118,43 @@ const studyData: Record<CycleId, CycleData> = {
         id: 's2',
         title: 'Semester 2 (CP1)',
         modules: [
-          { 
+          {
             id: 'math2', name: 'Analysis 2', code: 'MATH3', coeff: 5, credits: 5,
             objectives: 'Integration (Riemann), differential equations, and functions of several variables.'
           },
-          { 
+          {
             id: 'alg2', name: 'Algebra 2', code: 'MATH4', coeff: 4, credits: 4,
             objectives: 'Vector spaces, linear maps, matrices, determinants, and systems of linear equations.'
           },
-          { 
+          {
             id: 'prob2', name: 'Probability', code: 'PROB', coeff: 4, credits: 4,
             objectives: 'Advanced probability concepts, distributions, and applications in engineering contexts.'
           },
-          { 
+          {
             id: 'phys2', name: 'Physics 2 (Electricity)', code: 'PHYS2', coeff: 5, credits: 5,
             objectives: 'Electrostatics, magnetostatics, DC circuits, Kirchhoff laws, and introductory electromagnetism.'
           },
-          { 
+          {
             id: 'chem2', name: 'Chemistry 2', code: 'CHEM2', coeff: 4, credits: 4,
             objectives: 'Thermodynamics, first and second laws, entropy, enthalpy, and chemical equilibrium.'
           },
-          { 
+          {
             id: 'info2', name: 'Algorithms and Data Structures', code: 'INFO2', coeff: 4, credits: 4,
             objectives: 'Advanced data structures (lists, stacks, queues), recursion, and algorithm efficiency.'
           },
-          { 
+          {
             id: 'cad', name: 'Computer Aided Design', code: 'CAD', coeff: 1, credits: 1,
             objectives: 'Introduction to CAD software tools for engineering design and modeling.'
           },
-          { 
+          {
             id: 'linux', name: 'Linux OS Fundamentals', code: 'LINUX', coeff: 1, credits: 1,
             objectives: 'Basics of the Linux operating system, command line interface, and file system management.'
           },
-          { 
+          {
             id: 'hist2', name: 'History of Algeria 2', code: 'HIST2', coeff: 1, credits: 1,
             objectives: 'Continuation of historical studies regarding Algeria.'
           },
-          { 
+          {
             id: 'eng2', name: 'English 2', code: 'LANG2', coeff: 1, credits: 1,
             objectives: 'Advanced technical English, report writing, and professional communication.'
           },
@@ -164,43 +164,43 @@ const studyData: Record<CycleId, CycleData> = {
         id: 's3',
         title: 'Semester 3 (CP2)',
         modules: [
-          { 
+          {
             id: 'math3', name: 'Analysis 3', code: 'MATH5', coeff: 3, credits: 3,
             objectives: 'Series (numerical and function), power series, and Fourier series.'
           },
-          { 
+          {
             id: 'num1', name: 'Numerical Analysis 1', code: 'NUM1', coeff: 3, credits: 3,
             objectives: 'Numerical methods for root finding, linear systems, and error analysis.'
           },
-          { 
+          {
             id: 'phys3', name: 'Physics 3', code: 'PHYS3', coeff: 4, credits: 4,
             objectives: 'Vibrations and Waves: Mechanical and electrical oscillations, damped/forced vibrations.'
           },
-          { 
+          {
             id: 'chem3', name: 'Chemistry 3', code: 'CHEM3', coeff: 3, credits: 3,
             objectives: 'Chemical kinetics, electrochemistry, and advanced solution chemistry.'
           },
-          { 
+          {
             id: 'mrb1', name: 'Mechanics of Rigid Bodies 1', code: 'MECH1', coeff: 3, credits: 3,
             objectives: 'Kinematics and dynamics of rigid bodies, moments of inertia, and static equilibrium.'
           },
-          { 
+          {
             id: 'elec1', name: 'General Electricity', code: 'ELEC1', coeff: 4, credits: 4,
             objectives: 'AC circuits, resonance, filters, and network theorems in frequency domain.'
           },
-          { 
+          {
             id: 'fluid', name: 'Fluid Mechanics', code: 'FLUID', coeff: 3, credits: 3,
             objectives: 'Properties of fluids, fluid statics, fluid dynamics, continuity and Bernoulli equations.'
           },
-          { 
+          {
             id: 'algo3', name: 'Adv. Data Structures & Algo', code: 'INFO3', coeff: 3, credits: 3,
             objectives: 'Trees, graphs, hashing, advanced sorting algorithms, and complexity analysis.'
           },
-          { 
+          {
             id: 'dig1', name: 'Digital Logic & Comb. Circuits', code: 'DIG1', coeff: 3, credits: 3,
             objectives: 'Boolean algebra, logic gates, minimization techniques, and combinational circuit design.'
           },
-          { 
+          {
             id: 'pat1', name: 'Patriotism and Citizenship 1', code: 'CIV1', coeff: 1, credits: 1,
             objectives: 'Concepts of citizenship, national identity, and civic responsibilities.'
           },
@@ -210,43 +210,43 @@ const studyData: Record<CycleId, CycleData> = {
         id: 's4',
         title: 'Semester 4 (CP2)',
         modules: [
-          { 
+          {
             id: 'math4', name: 'Analysis 4', code: 'MATH6', coeff: 3, credits: 3,
             objectives: 'Complex analysis, holomorphic functions, residues, and integral transforms (Laplace/Fourier).'
           },
-          { 
+          {
             id: 'num2', name: 'Numerical Analysis 2', code: 'NUM2', coeff: 3, credits: 3,
             objectives: 'Numerical integration, differentiation, and solving differential equations numerically.'
           },
-          { 
+          {
             id: 'phys4', name: 'Physics 4', code: 'PHYS4', coeff: 4, credits: 4,
             objectives: 'Modern Physics and Optics: Quantum concepts, geometrical and wave optics.'
           },
-          { 
+          {
             id: 'chem4', name: 'Chemistry 4', code: 'CHEM4', coeff: 3, credits: 3,
             objectives: 'Organic chemistry fundamentals or specialized chemistry topics for engineering.'
           },
-          { 
+          {
             id: 'mrb2', name: 'Mechanics of Rigid Bodies 2', code: 'MECH2', coeff: 3, credits: 3,
             objectives: 'Advanced dynamics, gyroscopic motion, and lagrangian mechanics fundamentals.'
           },
-          { 
+          {
             id: 'elec2', name: 'General Electronics', code: 'ELEC2', coeff: 4, credits: 4,
             objectives: 'Diodes, transistors (BJT/FET), amplifiers, and operational amplifier applications.'
           },
-          { 
+          {
             id: 'som', name: 'Strength of Materials', code: 'RDM', coeff: 3, credits: 3,
             objectives: 'Stress, strain, torsion, bending, and deflection of beams.'
           },
-          { 
+          {
             id: 'oop', name: 'Object-Oriented Programming', code: 'OOP', coeff: 3, credits: 3,
             objectives: 'OOP principles: encapsulation, inheritance, polymorphism using Java or C++.'
           },
-          { 
+          {
             id: 'dig2', name: 'Digital Sys. & Seq. Circuits', code: 'DIG2', coeff: 3, credits: 3,
             objectives: 'Latches, flip-flops, counters, registers, and sequential state machine design.'
           },
-          { 
+          {
             id: 'pat2', name: 'Patriotism and Citizenship 2', code: 'CIV2', coeff: 1, credits: 1,
             objectives: 'Advanced topics in civic engagement, ethics, and national institutions.'
           },
@@ -566,15 +566,15 @@ const StudyGuide: React.FC = () => {
   // Handle direct navigation from About page
   useEffect(() => {
     if (location.state) {
-        if (location.state.mode) {
-          setViewMode(location.state.mode);
-        }
-        if (location.state.specialty) {
-          setActiveSpecialty(location.state.specialty);
-        }
-        // Reset specific selections when navigating from outside
-        setSelectedSemester(null);
-        setSelectedModule(null);
+      if (location.state.mode) {
+        setViewMode(location.state.mode);
+      }
+      if (location.state.specialty) {
+        setActiveSpecialty(location.state.specialty);
+      }
+      // Reset specific selections when navigating from outside
+      setSelectedSemester(null);
+      setSelectedModule(null);
     }
   }, [location]);
 
@@ -583,6 +583,10 @@ const StudyGuide: React.FC = () => {
     setSelectedSemester(null);
     setSelectedModule(null);
   };
+
+  useEffect(() => {
+    document.title = "Study Guides | NHSAST Space - Academic Excellence";
+  }, []);
 
   const handleViewModeChange = (mode: ViewMode) => {
     setViewMode(mode);
@@ -617,7 +621,7 @@ const StudyGuide: React.FC = () => {
   // Helper to determine icon based on module name
   const getModuleIcon = (name: string) => {
     const lower = name.toLowerCase();
-    
+
     // Aeronautical & Unmanned
     if (lower.includes('uav') || lower.includes('flight') || lower.includes('aero') || lower.includes('unmanned')) return <Plane size={24} />;
     if (lower.includes('navigation') || lower.includes('guidance')) return <Crosshair size={24} />;
@@ -628,20 +632,20 @@ const StudyGuide: React.FC = () => {
     if (lower.includes('math') || lower.includes('analysis') || lower.includes('algebra')) return <Calculator size={24} />;
     if (lower.includes('phys') || lower.includes('mechanics') || lower.includes('optics') || lower.includes('vib')) return <Atom size={24} />;
     if (lower.includes('chem') || lower.includes('thermo')) return <Zap size={24} />;
-    
+
     // Computing & Electronics
     if (lower.includes('security') || lower.includes('cryptography') || lower.includes('cyber')) return <Lock size={24} />;
     if (lower.includes('ai') || lower.includes('intelligence') || lower.includes('learning')) return <Brain size={24} />;
     if (lower.includes('network') || lower.includes('iot') || lower.includes('wireless') || lower.includes('communication')) return <Wifi size={24} />;
     if (lower.includes('database')) return <Database size={24} />;
     if (lower.includes('antenna') || lower.includes('propagation')) return <Radio size={24} />;
-    
+
     // Engineering & Robotics
     if (lower.includes('power') || lower.includes('electric') || lower.includes('machines')) return <Zap size={24} />;
     if (lower.includes('control') || lower.includes('robotics') || lower.includes('automation') || lower.includes('actuator')) return <Settings size={24} />;
     if (lower.includes('computing') || lower.includes('processor') || lower.includes('fpga') || lower.includes('gpu') || lower.includes('server')) return <Cpu size={24} />;
     if (lower.includes('program') || lower.includes('algo') || lower.includes('software') || lower.includes('linux') || lower.includes('os')) return <Binary size={24} />;
-    
+
     return <BookOpen size={24} />;
   };
 
@@ -651,14 +655,14 @@ const StudyGuide: React.FC = () => {
     return (
       <div className="animate-float-in space-y-12">
         <div className="glass-panel p-8 rounded-2xl border border-accent-cyan/20 bg-accent-cyan/5">
-            <h3 className="text-2xl font-bold mb-4 text-white">Engineering Cycle</h3>
-            <p className="text-gray-300 leading-relaxed text-lg">
-                Select your specialty to view the semester curriculum and modules.
-            </p>
+          <h3 className="text-2xl font-bold mb-4 text-white">Engineering Cycle</h3>
+          <p className="text-gray-300 leading-relaxed text-lg">
+            Select your specialty to view the semester curriculum and modules.
+          </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {specialties.map(id => {
+          {specialties.map(id => {
             const data = studyData[id];
             // Get an icon for the specialty
             let Icon = Cpu;
@@ -666,25 +670,25 @@ const StudyGuide: React.FC = () => {
             if (id === 'usnc') Icon = Plane;
 
             return (
-                <div key={id} className="glass-panel p-8 rounded-2xl border border-white/5 hover:border-white/20 transition-all group flex flex-col items-center text-center">
-                    <div className="p-4 rounded-xl bg-accent-cyan/10 text-accent-cyan mb-4 group-hover:scale-110 transition-transform">
-                        <Icon size={48} />
-                    </div>
-                    <h3 className="text-2xl font-display font-bold text-white mb-2">
-                        {data.label}
-                    </h3>
-                    <p className="text-sm text-gray-500 mb-6 flex-grow">
-                        {data.description}
-                    </p>
-                    <button
-                        onClick={() => handleSpecialtySelect(id)}
-                        className="w-full px-6 py-3 rounded-lg bg-white/10 hover:bg-white/20 text-white font-bold transition-colors flex items-center justify-center gap-2 group-hover:bg-accent-cyan group-hover:text-black"
-                    >
-                        View Curriculum <ChevronRight size={16} />
-                    </button>
+              <div key={id} className="glass-panel p-8 rounded-2xl border border-white/5 hover:border-white/20 transition-all group flex flex-col items-center text-center">
+                <div className="p-4 rounded-xl bg-accent-cyan/10 text-accent-cyan mb-4 group-hover:scale-110 transition-transform">
+                  <Icon size={48} />
                 </div>
+                <h3 className="text-2xl font-display font-bold text-white mb-2">
+                  {data.label}
+                </h3>
+                <p className="text-sm text-gray-500 mb-6 flex-grow">
+                  {data.description}
+                </p>
+                <button
+                  onClick={() => handleSpecialtySelect(id)}
+                  className="w-full px-6 py-3 rounded-lg bg-white/10 hover:bg-white/20 text-white font-bold transition-colors flex items-center justify-center gap-2 group-hover:bg-accent-cyan group-hover:text-black"
+                >
+                  View Curriculum <ChevronRight size={16} />
+                </button>
+              </div>
             )
-        })}
+          })}
         </div>
       </div>
     );
@@ -693,34 +697,34 @@ const StudyGuide: React.FC = () => {
   const renderSemesters = () => {
     if (!activeData) return null;
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-float-in">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-float-in">
         {activeData.semesters.map((semester) => (
-            <button
+          <button
             key={semester.id}
             onClick={() => handleSemesterClick(semester)}
             className="glass-panel p-8 rounded-2xl border border-white/5 hover:border-accent-cyan/50 hover:bg-white/5 transition-all group text-left flex flex-col items-start gap-4 relative overflow-hidden"
-            >
+          >
             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                <Calendar size={100} />
+              <Calendar size={100} />
             </div>
-            
+
             <div className="p-4 rounded-xl bg-accent-cyan/10 text-accent-cyan group-hover:scale-110 transition-transform z-10">
-                <Calendar size={32} />
+              <Calendar size={32} />
             </div>
             <div className="z-10">
-                <h3 className="text-xl font-display font-bold text-white group-hover:text-accent-cyan transition-colors">
+              <h3 className="text-xl font-display font-bold text-white group-hover:text-accent-cyan transition-colors">
                 {semester.title}
-                </h3>
-                <p className="text-sm text-gray-400 mt-2">
+              </h3>
+              <p className="text-sm text-gray-400 mt-2">
                 {semester.modules.length} Modules
-                </p>
+              </p>
             </div>
             <div className="mt-auto w-full pt-4 flex justify-end z-10">
-                <ChevronRight className="text-gray-500 group-hover:text-white transition-colors" />
+              <ChevronRight className="text-gray-500 group-hover:text-white transition-colors" />
             </div>
-            </button>
+          </button>
         ))}
-        </div>
+      </div>
     );
   };
 
@@ -756,33 +760,33 @@ const StudyGuide: React.FC = () => {
 
   const renderResources = () => {
     if (!selectedModule) return null;
-    
+
     const resourceTypes: { id: string; title: string; icon: React.ReactNode; color: string; desc: string }[] = [
-      { 
-        id: 'courses', 
-        title: 'Courses', 
-        icon: <Library size={32} />, 
+      {
+        id: 'courses',
+        title: 'Courses',
+        icon: <Library size={32} />,
         color: 'text-accent-cyan',
         desc: 'Lecture notes and summaries'
       },
-      { 
-        id: 'td', 
-        title: 'TDs & Exercises', 
-        icon: <PenTool size={32} />, 
-        color: 'text-accent-purple', 
+      {
+        id: 'td',
+        title: 'TDs & Exercises',
+        icon: <PenTool size={32} />,
+        color: 'text-accent-purple',
         desc: 'Tutorial series and practice problems'
       },
-      { 
-        id: 'exams', 
-        title: 'Exams', 
-        icon: <FileText size={32} />, 
+      {
+        id: 'exams',
+        title: 'Exams',
+        icon: <FileText size={32} />,
         color: 'text-accent-pink',
         desc: 'Previous exams and corrections'
       },
-      { 
-        id: 'extra', 
-        title: 'Additional Resources', 
-        icon: <Video size={32} />, 
+      {
+        id: 'extra',
+        title: 'Additional Resources',
+        icon: <Video size={32} />,
         color: 'text-green-400',
         desc: 'Video tutorials and external links'
       },
@@ -803,7 +807,7 @@ const StudyGuide: React.FC = () => {
               {/* Coefficients and Credits removed */}
             </div>
             <h2 className="text-3xl font-display font-bold text-white mb-6">{selectedModule.name}</h2>
-            
+
             {selectedModule.objectives && (
               <div className="bg-white/5 rounded-xl p-6 border border-white/5">
                 <div className="flex items-center gap-2 mb-2 text-gray-300 font-bold">
@@ -821,7 +825,7 @@ const StudyGuide: React.FC = () => {
         {/* Resources Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {resourceTypes.map((type) => (
-            <div 
+            <div
               key={type.id}
               className="glass-panel p-8 rounded-2xl border border-white/5 flex flex-col items-center text-center gap-4 hover:border-white/20 transition-all opacity-80 hover:opacity-100 group"
             >
@@ -859,116 +863,114 @@ const StudyGuide: React.FC = () => {
 
         {/* Top Level Navigation Tabs */}
         <div className="flex flex-wrap gap-4 mb-8 border-b border-white/10 pb-1">
-            <button
-                onClick={() => handleViewModeChange('prep')}
-                className={`px-6 py-3 rounded-t-lg font-medium transition-all relative ${
-                    viewMode === 'prep'
-                    ? 'text-white bg-white/5 border-t border-x border-white/10'
-                    : 'text-gray-500 hover:text-white hover:bg-white/5'
-                }`}
-            >
-                Preparatory Cycle
-                {viewMode === 'prep' && <div className="absolute bottom-[-1px] left-0 w-full h-[1px] bg-space-900" />}
-            </button>
-            <button
-                onClick={() => handleViewModeChange('specs')}
-                className={`px-6 py-3 rounded-t-lg font-medium transition-all relative ${
-                    viewMode === 'specs'
-                    ? 'text-white bg-white/5 border-t border-x border-white/10'
-                    : 'text-gray-500 hover:text-white hover:bg-white/5'
-                }`}
-            >
-                Specialties
-                {viewMode === 'specs' && <div className="absolute bottom-[-1px] left-0 w-full h-[1px] bg-space-900" />}
-            </button>
+          <button
+            onClick={() => handleViewModeChange('prep')}
+            className={`px-6 py-3 rounded-t-lg font-medium transition-all relative ${viewMode === 'prep'
+                ? 'text-white bg-white/5 border-t border-x border-white/10'
+                : 'text-gray-500 hover:text-white hover:bg-white/5'
+              }`}
+          >
+            Preparatory Cycle
+            {viewMode === 'prep' && <div className="absolute bottom-[-1px] left-0 w-full h-[1px] bg-space-900" />}
+          </button>
+          <button
+            onClick={() => handleViewModeChange('specs')}
+            className={`px-6 py-3 rounded-t-lg font-medium transition-all relative ${viewMode === 'specs'
+                ? 'text-white bg-white/5 border-t border-x border-white/10'
+                : 'text-gray-500 hover:text-white hover:bg-white/5'
+              }`}
+          >
+            Specialties
+            {viewMode === 'specs' && <div className="absolute bottom-[-1px] left-0 w-full h-[1px] bg-space-900" />}
+          </button>
         </div>
 
         {/* Navigation Breadcrumbs & Controls */}
         <div className="mb-8 flex items-center justify-between flex-wrap gap-4">
-            <div className="flex items-center flex-wrap gap-2 text-sm bg-white/5 p-4 rounded-lg border border-white/10">
-                <button 
-                    onClick={() => {
-                        if (viewMode === 'specs' && activeSpecialty) {
-                            setActiveSpecialty(null);
-                            resetSelection();
-                        }
-                    }}
-                    className={`hover:text-accent-cyan transition-colors ${!activeSpecialty && !selectedSemester ? 'text-accent-cyan font-bold' : 'text-gray-400'}`}
-                    disabled={viewMode === 'prep'}
-                >
-                    {viewMode === 'prep' ? 'Preparatory Cycle' : 'Specialties'}
-                </button>
-                
-                {viewMode === 'specs' && activeSpecialty && (
-                    <>
-                        <ChevronRight size={14} className="text-gray-600" />
-                        <button 
-                            onClick={() => resetSelection()}
-                            className={`hover:text-accent-cyan transition-colors ${!selectedSemester ? 'text-accent-cyan font-bold' : 'text-gray-400'}`}
-                        >
-                            {studyData[activeSpecialty].label}
-                        </button>
-                    </>
-                )}
-                
-                {selectedSemester && (
-                    <>
-                    <ChevronRight size={14} className="text-gray-600" />
-                    <button 
-                        onClick={() => setSelectedModule(null)}
-                        className={`hover:text-accent-cyan transition-colors ${!selectedModule ? 'text-accent-cyan font-bold' : 'text-gray-400'}`}
-                    >
-                        {selectedSemester.title}
-                    </button>
-                    </>
-                )}
-
-                {selectedModule && (
-                    <>
-                    <ChevronRight size={14} className="text-gray-600" />
-                    <span className="text-accent-cyan font-bold truncate max-w-[200px]">
-                        {selectedModule.name}
-                    </span>
-                    </>
-                )}
-            </div>
-
-             {/* Back Buttons for Mobile/Convenience */}
-            {(selectedSemester || selectedModule || (viewMode === 'specs' && activeSpecialty)) && (
-            <button 
-                onClick={() => {
-                    if (selectedModule) {
-                        setSelectedModule(null);
-                    } else if (selectedSemester) {
-                        setSelectedSemester(null);
-                    } else if (activeSpecialty) {
-                        setActiveSpecialty(null);
-                    }
-                }}
-                className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors group"
+          <div className="flex items-center flex-wrap gap-2 text-sm bg-white/5 p-4 rounded-lg border border-white/10">
+            <button
+              onClick={() => {
+                if (viewMode === 'specs' && activeSpecialty) {
+                  setActiveSpecialty(null);
+                  resetSelection();
+                }
+              }}
+              className={`hover:text-accent-cyan transition-colors ${!activeSpecialty && !selectedSemester ? 'text-accent-cyan font-bold' : 'text-gray-400'}`}
+              disabled={viewMode === 'prep'}
             >
-                <div className="p-2 bg-white/5 rounded-full group-hover:bg-white/10 transition-colors">
-                <ArrowLeft size={16} />
-                </div>
-                <span>Back</span>
+              {viewMode === 'prep' ? 'Preparatory Cycle' : 'Specialties'}
             </button>
+
+            {viewMode === 'specs' && activeSpecialty && (
+              <>
+                <ChevronRight size={14} className="text-gray-600" />
+                <button
+                  onClick={() => resetSelection()}
+                  className={`hover:text-accent-cyan transition-colors ${!selectedSemester ? 'text-accent-cyan font-bold' : 'text-gray-400'}`}
+                >
+                  {studyData[activeSpecialty].label}
+                </button>
+              </>
             )}
+
+            {selectedSemester && (
+              <>
+                <ChevronRight size={14} className="text-gray-600" />
+                <button
+                  onClick={() => setSelectedModule(null)}
+                  className={`hover:text-accent-cyan transition-colors ${!selectedModule ? 'text-accent-cyan font-bold' : 'text-gray-400'}`}
+                >
+                  {selectedSemester.title}
+                </button>
+              </>
+            )}
+
+            {selectedModule && (
+              <>
+                <ChevronRight size={14} className="text-gray-600" />
+                <span className="text-accent-cyan font-bold truncate max-w-[200px]">
+                  {selectedModule.name}
+                </span>
+              </>
+            )}
+          </div>
+
+          {/* Back Buttons for Mobile/Convenience */}
+          {(selectedSemester || selectedModule || (viewMode === 'specs' && activeSpecialty)) && (
+            <button
+              onClick={() => {
+                if (selectedModule) {
+                  setSelectedModule(null);
+                } else if (selectedSemester) {
+                  setSelectedSemester(null);
+                } else if (activeSpecialty) {
+                  setActiveSpecialty(null);
+                }
+              }}
+              className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors group"
+            >
+              <div className="p-2 bg-white/5 rounded-full group-hover:bg-white/10 transition-colors">
+                <ArrowLeft size={16} />
+              </div>
+              <span>Back</span>
+            </button>
+          )}
         </div>
 
         {/* Main Interface Content */}
         {viewMode === 'specs' && !activeSpecialty ? (
-            renderSpecialtySelection()
+          renderSpecialtySelection()
         ) : !selectedSemester ? (
-            <>
-                {/* Optional header for the cycle/specialty */}
-                {(activeData) && (
-                    <div className="mb-8 animate-float-in">
-                        <h2 className="text-2xl font-bold mb-2">{activeData.label}</h2>
-                        <p className="text-gray-400">{activeData.description}</p>
-                    </div>
-                )}
-                {renderSemesters()}
-            </>
+          <>
+            {/* Optional header for the cycle/specialty */}
+            {(activeData) && (
+              <div className="mb-8 animate-float-in">
+                <h2 className="text-2xl font-bold mb-2">{activeData.label}</h2>
+                <p className="text-gray-400">{activeData.description}</p>
+              </div>
+            )}
+            {renderSemesters()}
+          </>
         ) : !selectedModule ? (
           renderModules()
         ) : (
