@@ -29,7 +29,10 @@ import {
   Cog,
   Briefcase,
   Radio,
-  Globe
+  Globe,
+  ExternalLink,
+  MessageSquare,
+  Heart
 } from 'lucide-react';
 
 // Types
@@ -44,6 +47,17 @@ interface Module {
   credits: number; // Kept in interface but not rendered
   objectives?: string;
   icon?: React.ReactNode;
+
+  resources?: {
+    courses?: ResourceItem[];
+    tds?: ResourceItem[];
+    exams?: ResourceItem[];
+  };
+}
+
+interface ResourceItem {
+  title: string;
+  link: string; // URL to the specific PDF/Folder
 }
 
 interface Semester {
@@ -54,12 +68,17 @@ interface Semester {
 
 interface CycleData {
   id: CycleId;
+
+
   label: string;
   description: string;
   semesters: Semester[];
+  advice?: string[];
 }
 
 const SCHOOL_INTRO = "Autonomous systems represent the pinnacle of modern engineering—machines capable of sensing, thinking, and acting without direct human intervention. From self-driving cars to interplanetary rovers, this field is reshaping our world. NHSAST is committed to training the elite engineers who will drive this revolution. Our curriculum is rigorously designed to bridge the gap between abstract mathematical theory and real-world application, fostering a deep understanding of the complex interplay between hardware, software, and physical dynamics.";
+
+const DRIVE_ROOT_URL = "https://drive.google.com/drive/folders/1tClaiMRU4ZChMmY6gBYrjSMeZbAfclcD?usp=sharing";
 
 // Data Definition based on NHSAST Program PDF & Standard CP
 const studyData: Record<CycleId, CycleData> = {
@@ -67,6 +86,100 @@ const studyData: Record<CycleId, CycleData> = {
     id: 'prep',
     label: 'Preparatory Cycle',
     description: 'Foundational sciences and engineering basics (CP1 & CP2)',
+    advice: [
+      `Louay, a first year student words:
+
+نعطيكم مثال عن تجربتي
+
+الاخطاء لي درتهم وضيعولي فرص : 
+
+-أول وأسوأ خطأ هو انو كنت نصور الطابلوات تاع ليكور، في بلاصة ماندي نقاط مهمة ونكتبها، لانو بيناتنا، اغلبية الاساتذة يبعتو لي كور ، وكي نصور 365 تصويرة تاع طابلو باينة ماراحش نقرا حتى وحدة 
+بصح كون نكتب النقاط، كيما درت فالتاريخ، نلقا روحي كتبت اهم عفايس فالدرس، ونلقا روحي نقدر نسترجع كامل المعلومات
+
+-ثاني خطأ درتو، هو اني، كي مانفهمش عفسة ، نخليها ومانحوسش نفهم وشنهيا، مثال ليكور تاع كشيدي ، راني حاس بلي كون كي نولي لعشيا للشومبرة، رحت قريت الكور ديالو وسييت نفهمو (ولا نقرا النقاط لي كتبتهم مسبقا) راح نستوعب وش دار
+
+- ثالث خطأ هو ليلة الرعد : خاوتي ماللخر ليلة الرعد عندها فايدة، بصح مشي ليلة الرعد لي اغلبيتنا دارها : تاع موديل ماحاكمين فيه والو نقراوه كومبلي في ليلة، هادي تصلح غير في اونجلي 
+
+-رابع خطأ، عندو علاقة بالتيبيات، كيما تعرفو حنا كي نديرو لاب فيزيك، نسييو ڨاع وش نقدرو باش نكملوه نليكيديوه ونروحو، بصح كون دينا وقتنا، وسيينا فهمناه قبلو وبعدو، واعطينالو حقو، كون ماخلاصتش فينا سمانة نقراو علاجال تاست تيبي 
+
+
+واحد مالاخطاء لي كامل درناه هو تراكم الدروس، خليناهم حتى العطلة تاع الاختبارات ، شخصيا كون جيت نسيي نفهم وش دارو لي بروف فليكور قبل مانرقد، بالاك نقصت عليا بزاف خدمة
+
+ثاني نصيحة ، كي نحلو سيري تيدي فالكلاصة، عاودو ديروها ، معليش مش ڨاع التمارين، فالويكاند ولا، عاودو سييو حلو من راسكم، بلا شات جيبيتي بلا الحل، وركزو مع البروف كي تحل تيدي ، لانو الطريقة تاع التفكير ديالها راح تقعد في راسكم حتى وماحسيتوش
+
+
+وسييو رجعو القراية طريقة عيش، مش عفسة تديرونجي ولازملها وقت، شغل سييو والفوها تديروها كيما تاكلو تشربو تريحو …
+
+الخطة لي راني حاب نديرها في s2 ? 
+شوفو باش نقوللكم راح نطبقها سواسوا راني نكذب، مي راح نعطيلكم الخطة لي تبانلي optimal، مع العلم ماراحش نطبقها هي ، هادي في حالة تاع طالب مثالي، يقدر الواحد يسيي يدير كيما هو :
+
+
+اولا يحضر ليكور، مالڨري مايفهمش ، بصح يحضر ويسيي يدي نقاط مهمة وعفايس لي تقولهم الشيخة يكتبهم (مش لي تقراهم ، تقولهم)
+
+ثانيا، كي يكمل النهار، يعاود يقرا الكور او النقاط لي كتبهم ، يسيي يفهم، اذا مافهمش، يخير اكثر كور مافهموش هاداك النهار، ومايرقدش حتى يفهمو،
+
+ثالثا، كي يكمل هادو ويبقالو وقت، يسيي يحل تمارين تاع لاسيري لي حلهم البروف الصباح، اوووو اذا ماكانش وقت، يقرا الحل بصح يسيي يفهمو مليح
+
+فالويكاند : يوجد للتيبي تاع سمانة الجاية، مهما كان، يسيي يحل لي سيري تاع سمانة الجاية (تمرين ولا زوج من كل سيري)
+
+وقت الفراغ : يريح باينة هادي، مي اذا كان وقت فراغو كبير، يسيي يوجد للكور الجاي
+
+هادا مخطط ماشكيتش يقدر واحد يطبقه كيما راه، لانو صعيييب، بصح اي واحد فيها يبدل فيه على حساب ظروفو، وقادر يعاونو`,
+      `Hiba, a first year student:
+
+السلام عليكم ورحمة الله و بركاته 
+بالنسبة لاخطائي في ال s1 
+اولا كيما قال لؤي التصواااار كنت حرفيا نصور في الكور والتيدي ومنعاودش نشوف هاذوك ليفوطو (انصح نفسي واياكم وليو تكتبو اهم الافكار لي قالهم لبروف ومام اكتبو الكور راح يسهل عليكم بزاف من بعد متحتاجوش ملخص غير كور لبروف وتسييو تفهموه برك) 
+ثاني غلطة درتها انو كنت كي منفهمش نسكت حرفيا هاذي غلطة عمري 
+كان لازم كي منفهمش نحبس لبروف ونقلو عاودلي ومفهمتش وكي منفهمش كلمة نحبسو ونقلو وش معناها (كنت نخدع روحي ولي منفهمهاش نقول خلي هاذي من بعد نبحث عليها ونفهمها في اللخر لقيت روحي راكمت بزااااااف دروس ومعلومات مكنتش نفهمهم وملقيتش اصلا منين نفهمهم) 
+ثالثا مكانش لازم نسكت للجماعة لي كانت تشوش عليا في اللونفي (منا وجاي لي تقعد تنعت في روحها شوفوني فاهمة للبروف نقميها لانو في النهاية تحشاتلنا غير حنا وهوما شوشو علينا وفوقها كانو فاهمين اصلا(الذراري مام نتوما قومو ببعضاكم كي واحد يديرونجينا اهدرو معاه) )
+رابع غلطة وهي كي كنت نقول نطلع للاشونبر نقرا خير ومنبعد نعطيها برقدة ومنقراش (لي يبغي يقرا فلاشونبر ويشوف روحو ممكن يرقد من الاحسن يعيط لكاش واحد ويقعدو في زوج يقراو هك مترقدوش )
+كنت نقول بعد 10 كي نخلص من ليكول نطلع نرقد وفي اللخر نقعد نشايخ مع لبنات ونقصر وهك صباح منقدرش نوض بكري واذا نضت نقعد غير نثاوب في اللونفي (سييو تنظمو رقادكم واخطيكم من السهرات)
+اخطبكم من الناس المتشاءمة و لي تضال تشكي باسكو والله ياثرو عليكم سلبا وغير يحيبو طاقة سلبية 
+مام نتوما كي تكونو كارهين وباغية تشكو في بلاصة متجو تقولو مانيش نفهم هذاك الموديل ... اطلب نصيحة احسن وقول معليش تنصحوني كيفاه نفهم الموديل في بلاصة متولي جلسة شكاوي نحولوها لجلسة نصائح 🤍
+خاوتي مهما يصرا معاكم وتكونو كارهين صليو زوج ركعات تستراحو بيهم واشكيو لربي لانو حرفيا الشكوى لغير الله مذلة 
+و تمسكو بدينكم واخلاقكم هنا راهو جاي رمضان وهي فرصة عظييمة للتقرب لله متخليوش لقرايا والامتحانات الدنيوية تبعدكم على ربي ...
+في الs2 خاوتي سييو تطلعو التيدي والتيبي مليح فاذا كتب ربي ومخدمتوش في الاختبار تقدر تكلع معدلك كيما صرا مع زايير
+
+نصيحة ليا وليكم 
+في ال s2 سورتو فيزيا واناليز والجابر اقراو الكور قبل متدخلو هذا يخليكم تفهمو مليييح في الكور على لبروف متجيوش تيتكشفو الكور مع ليبروف نتاوعنا هاذو يليق تجي تراجع معاهم 
+ليسيري سييو تحلوهم قبل التيدي منها في التيدي تثحو لرواحكم وتفهمو خييير ومنها تربحو نقطة التيدي لانو تولو تشاركو سورتو عند كاديك ورزيق..
+التيبيات متهملوهمش 
+راهي ساهلة بعد كل تيبي مع تخلصو روحو لخصوه واكتبو اهم المعلومات وسقسيو زملاءكم اذا نسيتو كاش عفسة 
+هك في اللهر تلقاو رواحكم لخصتو كامل التيبيات وحدكم وحرفيا اذا درتو ملخصكم وحدكم وبيديكم في اللخر راح تقراوه فقط تتفكرو كلش`,
+      `PHN, a first year student:
+
+🌸السلام عليكم ورحمة الله وبركاته🌸
+  بعد ماجاز السداسي الأول كاين بزااف أمور تعلمتها من هذه الفترة على جميع المستويات منها الجانب الأكاديمي وهذه هي أهم النقاط:
+1🔹 الله سبحانه وتعالى هو اللي يسر الأمور والظروف لكل واحد فينا باش يجي ويقرا في هذا التخصص اذن ربي شاف في هذا التخصص الخير وشاف بلى كل واحد فينا يقدر لهذا التخصص بالرغم من الصعوبات اللي فيه
+2🔸 التوكل يكون على ربي ولا احد سواه احيانا تخدم مليح وتقول راني ضامنها وتلقا روحك ماديتش مليح ومنين ذاك ماخدمتش و علابالك بلى ماخدمتش وتلقا روحك ديت مليح فهذا كله توفيق من عند ربي سبحانه فلنحسن الظن بالله
+3🔹 الواحد يحاول يخلي دائما علاقتو بربي مليحة ويحافظ على وردو وصلاتو لانه دايما التوفيق من عند ربي
+🔻(في النقاط السابقة ركزت على علاقة العبد بربه لأنها جد مهمة واول حاجة يلزم نحرصو عليها قبل مانجو نهدرو على اي حاجة)
+4🔸 يلزم الواحد يدير في بالو بلى دايمن كاين لي خير منو وكاين لي أسوأ منو هكا باش يرتاح نفسيا (خاطر صح حقيقة )
+  5🔹 الكور حاجة مهمة بلبزاف حتى لو كان الواحد مايفهمش على الاستاذ خاطر على الاقل يدي اهم النقاط اللي ركز عليها الاستاذ لانو الاستغناء على واش قدم الاستاذ وتحوس وحدك في الانترنت يخليك توه واحيانا الاستاذ يركز غير حاجة ولا زوج في الكور والباقي لالا
+  6🔸 التأجيل أكبر مشكل يواجه كل واحد فينا في مرة نصحني استاذ وبروفيسور في الجامعة انو كامل واش يندار في الكور يتعاود وقالي بلى قريتو ساعة ونص هذيك المادة معنتها في الدار تعاود تراجع هذيك المادة لمدة ساعة ونص على الاقل
+7🔹 كي تحضر الكور راح تلقا ناس تحب تبين روحها بقصد وبغير قصد وراح تحسسك في قرارة نفسك بلي مزالك بعيد ونتا غبي والناس راها تفهم عادي في الحقيقة حتى هوما مراهومش فاهمين سواسوة ولا راهم حضروا الدرس من قبل  واللي هي صراحة حاجة مليحة لو كان الواحد يديرها 
+8🔸ركز على نفسك وفقط ومايهمكش حال البقية ولو طلعوا للقمر ولا ماتحركوش ولا خطوة نتا عندك هدف ويلزم تلحقلو بإذن المولى
+9🔸 مشي عيب انك تسقسي زملائك على اي عفسة بشرط انك ماتعيقهمش وماتعرقلهمش على مخططاتهم وتكون اناني وثان كي يجي يسقسي كاش واحد على حاجة حاول انك ماتبخلش عليه باي حاجة
+
+10🔸حاول سلسلة تاع td حلها في وقتها كيما كشيدي مقسم على سيري على حساب الأسابيع فمليح نستفيدو من هذا الشي باش يقعد الوقت باش الواحد يحل من جهة أخرى وحاول في كل محور دير الملخص نتاعك les astuces لي لقيتهم واكتشفتهم في التمارين نتاوعو
+11🔹 تنظيم الوقت هو السر النجاح بحيث كل حاجة عندها بلاصتها
+12🔸 حاول انك ما تكرسش كل وقتك للدارسة وتحرم نفسك في سبيلها خلي وقت باش دير هواياتك وطور نفسك واخرج من منطقة الراحة نتاعك
+13🔹 الامتحانات النصفية جد مهمة وكي تخدم فيها رح تعاونك من بعد
+14🔸بالنسبة للحصة الأعمال التطبيقية هذه هي أهم النقاط:
+▫️ حاول انك تكتب مع الاستاذ كي يكون يشرح(لي قدر يصور يصور السبورة يصورها) لخص كل tp بعد نهاية الحصة وتقدر تلخصو مع البينوم يعني جماعي  ▫️مليح لو كان تصور report تاعك 
+▫️وحتى لو كان الاستاذ دار التجربة سقسيه يخليك تسيي وتجرب خاطر في الامتحان نتا لي راح دير
+▫️ كي تكون مع البينوم لا كنتم مقسمين الأدوار تاع tp حاولوا تبدلوا وجرب دير الحاجة لي ماتعرفهاش
+ 15🔹بالنسبة للمواد حاول دايمن تحل أصعب عفسة و توقع من الأساتذة الأسوأ
+
+ 16🔸دائما والواحد يسقسي كي مايفهمش مشي يقول نروح للدار ونحوس عليها خاطر قادر تضرب نهار كامل ونتا يحوس عليها وهي قادر الاستاذ يواجبك في أقل من دقيقة ويفهمهالك
+
+17🔹بعد على الناس المتشائمة اللي تشكي دايمن ونتا حاول ثان ماتشكيش للاخرين وسقسيهم باش ينصحوك ونتا ثان تنصح بالشي لي تعرفو
+18🔸قبل ماتبدا تقرا حوس على جميع المصادر اللي تناسبك باش ماضيعش الوقت ونتا حوس عليها من بعد
+
+   وهذه هي أهم الأمور اللي تعلمتها وحبيت نقول لنفسي وليكم حاجة دوكا جازت أصعب فترة علينا لي هي S1 لانو كلش كان جديد وقدرنا نتجاوزو ونصمدو فيها بالرغم من عدة تحديات( أهمها تغير  المحيط والابتعاد عن الاهل وتمرميد الإقامة...) فبإذن الله نقدرو نتجاوزو اللي جاي ونعوضوا في السداسي الثاني ونداركوا أخطاءنا
+-وفقنا الله وإياكم إلى مايحب ويرضاه-`
+    ],
     semesters: [
       {
         id: 's1',
@@ -74,43 +187,197 @@ const studyData: Record<CycleId, CycleData> = {
         modules: [
           {
             id: 'math1', name: 'Analysis 1', code: 'MATH1', coeff: 5, credits: 5,
-            objectives: 'Real numbers, sequences, limits, continuity, differentiability, and expansion formulations.'
+            objectives: 'Real numbers, sequences, limits, continuity, differentiability, and expansion formulations.',
+            resources: {
+              courses: [
+                { title: 'Chapter 1: Real Numbers', link: 'https://drive.google.com/file/d/1k_5YTfqCUMVnZQZhrQzkPXgnHv4NBS0d/view?usp=drive_link' },
+                { title: 'Chapter 2: Sequences', link: 'https://drive.google.com/file/d/15CemQlGCcKe_UBE7u97QII5yKDd1pgM6/view?usp=drive_link' },
+                { title: 'Chapter 3: Functions', link: 'https://drive.google.com/file/d/1eACRwliqSHidgoZ6-EQiZedK-VATARuC/view?usp=drive_link' },
+                { title: 'Chapter 4: Elementary Functions', link: 'https://drive.google.com/file/d/1Lqy1Gec5JO2AfAm2B57kVeAQwcbadQt6/view?usp=drive_link' },
+              ],
+              tds: [
+                { title: 'Set 1: Real Numbers', link: 'https://drive.google.com/file/d/1bzQvlbSDb7vvRaobeX_UagBV-HmgxaJ0/view?usp=drive_link' },
+                { title: 'Set 2: Sequences', link: 'https://drive.google.com/file/d/1VcSdF96lTxBnSCvLcd5rT9675CQln4Bl/view?usp=drive_link' },
+                { title: 'Set 3: Functions', link: 'https://drive.google.com/drive/folders/1hHBVrNYhcy-XgPu3phQLeHPy9tZTAMaL' },
+                { title: 'Set 4: Elementary Functions', link: 'https://drive.google.com/drive/folders/1hHBVrNYhcy-XgPu3phQLeHPy9tZTAMaL' },
+              ]
+            }
           },
           {
             id: 'alg1', name: 'Algebra 1', code: 'MATH2', coeff: 4, credits: 4,
-            objectives: 'Logic, sets, maps, algebraic structures (groups, rings, fields), polynomials, and rational fractions.'
+            objectives: 'Logic, sets, maps, algebraic structures (groups, rings, fields), polynomials, and rational fractions.',
+            resources: {
+              courses: [
+                { title: 'Chapter 1: Logic', link: 'https://drive.google.com/file/d/1WDZCL2SWAViR9zacAVp9SBY2jT3dE2gI/view?usp=drive_link' },
+                { title: 'Chapter 2: Sets and Maps', link: 'https://drive.google.com/file/d/1LHtUA9buxC5CIt06MP2Mo3TkbvhyCdXl/view?usp=drive_link' },
+                { title: 'Chapter 3: Binary Operations', link: 'https://drive.google.com/file/d/1VPBQzUMVb0D6rH-NKFalS-qbkmSNRF6J/view?usp=drive_link' },
+                { title: 'Chapter 4: Algebraic Structures', link: 'https://drive.google.com/file/d/1xacKyVsmDW7AEnmWz0gONPe1JM6biwDk/view?usp=drive_link' },
+                { title: 'Chapter 5: Polynomes', link: 'https://drive.google.com/file/d/1nKLrtxCDv98ZRKQHDZIYqNxem2vf0bEi/view?usp=drive_link' },
+              ],
+              tds: [
+                { title: 'Set 1: Logic', link: 'https://drive.google.com/file/d/1BXJhv7LO8bEOM6_tRr9hz9CsgJi4KP4I/view?usp=drive_link' },
+                { title: 'Set 2: Sets and Maps', link: 'https://drive.google.com/file/d/1BFVrtPV6PMbIsJ_Kwy-A8cq47Zi1LnZo/view?usp=drive_link' },
+                { title: 'Set 3: Binary Operations', link: 'https://drive.google.com/file/d/1JJ-f_ys1YH7CYQDJpWZ0eJgZ65ncprOF/view?usp=drive_link' },
+                { title: 'Set 4: Algebraic Structures', link: 'https://drive.google.com/file/d/1UZ10j92iPwmmdiiJKNa4YsQPP2U28Jyp/view?usp=drive_link' },
+                { title: 'Set 5: Polynomes', link: 'https://drive.google.com/file/d/1n_G5KV1V1i6M8OPpgb22OgIxQ_RW4Stf/view?usp=drive_link' },
+              ]
+            }
           },
           {
             id: 'stat1', name: 'Probability and Statistics', code: 'STAT1', coeff: 4, credits: 4,
-            objectives: 'Descriptive statistics, probability spaces, conditional probability, and random variables.'
+            objectives: 'Descriptive statistics, probability spaces, conditional probability, and random variables.',
+            resources: {
+              courses: [
+                { title: 'Chapter 1: Statistical series with one variable', link: 'https://drive.google.com/file/d/1cMt_m3etqv2OVrShQQEVWUEZggUOH2F6/view?usp=drive_link' },
+                { title: 'Chapter 2: Statistical series with two variables', link: 'https://drive.google.com/file/d/19z0hViWGWLDUFCc-hKgEdRkYQV-HGzVo/view?usp=drive_link' },
+                { title: 'Chapter 3: Combinatorics & Probability', link: 'https://drive.google.com/drive/folders/1HxxuEh9wQb8ol7OrTSTYCdWI06AH5hH1' },
+              ],
+              tds: [
+                { title: 'Set 1: Statistical series with one variable', link: 'https://drive.google.com/drive/folders/1yS2PkOPpfbKizMLuEIIQdXSqgd2DagXr' },
+                { title: 'Set 2: Statistical series with two variables', link: 'https://drive.google.com/file/d/12kcvlCvQqBMM7gv1W6PyjsxNx75H5zu4/view?usp=drive_link' },
+                { title: 'Set 3: Combinatorics & Probability', link: 'https://drive.google.com/file/d/1OhRi2mBpoczvd1CqnlN7Av1cUhR9Ucuh/view?usp=drive_link' },
+              ]
+            }
           },
           {
             id: 'phys1', name: 'Physics 1 (Mechanics)', code: 'PHYS1', coeff: 5, credits: 5,
-            objectives: 'Kinematics, dynamics of point masses, work, energy, and momentum conservation laws.'
+            objectives: 'Kinematics, dynamics of point masses, work, energy, and momentum conservation laws.',
+            resources: {
+              courses: [
+                { title: 'Chapter 1: Mechanics Introduction', link: 'https://drive.google.com/file/d/1w9wvXiNUUci-oE1kFj4sEbEXNqCGUkqV/view?usp=drive_link' },
+                { title: 'Chapter 2: Kinetics', link: 'https://drive.google.com/file/d/10LrLISG_unBlrtDiJQLBHq8DU-T6c_6t/view?usp=drive_link' },
+                { title: 'Chapter 3: Kinematics of a Particle', link: 'https://drive.google.com/file/d/1FDU_jcRRVRcUAVfk5WjoRbuoB31cpIf1/view?usp=drive_link' },
+                { title: 'Chapter 4: Work and Energy', link: 'https://drive.google.com/file/d/1L57wfTpeo770Ok8eA7YhuMSF3k1pPasp/view?usp=drive_link' },
+                { title: 'Chapter 5: Collisions', link: 'https://drive.google.com/file/d/1tWcMZWsumfsCOLXr0lzuDNnY2hWD5yt-/view?usp=drive_link' },
+                { title: 'Chapter 6: Rotation', link: 'https://drive.google.com/file/d/1RjBDcU4B5AS2lMjZwjkF4gj2pTNf_U_S/view?usp=drive_link' },
+              ],
+              tds: [
+                { title: 'Set 1: Mechanics', link: 'https://drive.google.com/drive/folders/1g7K-RKwFvj-GHmiYMPM41xWFmGn6Mmhh' },
+                { title: 'Set 2: Kinetics', link: 'https://drive.google.com/file/d/1zctZKgb-DCK69mpo3IzNGZd6x4K8zOTZ/view?usp=drive_link' },
+                { title: 'Set 3: Kinematics of a Particle', link: 'https://drive.google.com/file/d/1Z5ucyJG8yIdt6-LbJXl0KpWk0abBONIw/view?usp=drive_link' },
+                { title: 'Set 4: Work and Energy', link: DRIVE_ROOT_URL },
+                { title: 'Set 5: Collisions', link: DRIVE_ROOT_URL },
+              ]
+            }
           },
           {
             id: 'chem1', name: 'Chemistry 1', code: 'CHEM1', coeff: 4, credits: 4,
-            objectives: 'Structure of matter, atomistic theory, periodic table, chemical bonding, and molecular structure.'
+            objectives: 'Structure of matter, atomistic theory, periodic table, chemical bonding, and molecular structure.',
+            resources: {
+              courses: [
+                { title: 'Chapter 1', link: 'https://drive.google.com/drive/folders/1tClaiMRU4ZChMmY6gBYrjSMeZbAfclcD' },
+                { title: 'Chapter 2', link: DRIVE_ROOT_URL },
+                { title: 'Chapter 3', link: DRIVE_ROOT_URL },
+                { title: 'Chapter 4', link: DRIVE_ROOT_URL },
+                { title: 'Chapter 5', link: DRIVE_ROOT_URL },
+                { title: 'Chapter 6', link: DRIVE_ROOT_URL },
+              ],
+              tds: [
+                { title: 'Set 1', link: 'https://drive.google.com/drive/folders/1tClaiMRU4ZChMmY6gBYrjSMeZbAfclcD' },
+                { title: 'Set 2', link: DRIVE_ROOT_URL },
+                { title: 'Set 3', link: DRIVE_ROOT_URL },
+                { title: 'Set 4', link: DRIVE_ROOT_URL },
+                { title: 'Set 5', link: DRIVE_ROOT_URL },
+                { title: 'Set 6', link: DRIVE_ROOT_URL },
+              ]
+            }
           },
           {
             id: 'info1', name: 'Introduction to Programming', code: 'INFO1', coeff: 4, credits: 4,
-            objectives: 'Introduction to algorithmic thinking, variables, loops, arrays, and basic programming logic.'
+            objectives: 'Introduction to algorithmic thinking, variables, loops, arrays, and basic programming logic.',
+            resources: {
+              courses: [
+                { title: 'Chapter 1: Introduction', link: 'https://drive.google.com/file/d/1rqnx-gQyNOykyre_XIAsj7hlPrKvorTx/view?usp=drive_link' },
+                { title: 'Chapter 2: Algorithms', link: 'https://drive.google.com/file/d/1xRsAepKK8EPjFeZAWITKVn8yp6lw1vm7/view?usp=drive_link' },
+                { title: 'Chapter 3: Languages', link: 'https://drive.google.com/file/d/1cYhPni6XD5zha0_5vk9E4_6ilOuvSyD4/view?usp=drive_link' },
+                { title: 'Chapter 4: Variables', link: 'https://drive.google.com/file/d/1w3alJJDzKtswBqBLY-UkX1Mrlog6UeG4/view?usp=drive_link' },
+                { title: 'Chapter 5: Instructions', link: 'https://drive.google.com/file/d/1HJXLnGen-0gMesyAOkHNOynzyvFXwRz/view?usp=drive_link' },
+                { title: 'Chapter 6: Structure', link: 'https://drive.google.com/file/d/1zvkEQUCjvAP_vatStMA-Xba-bLmki7Jd/view?usp=drive_link' },
+                { title: 'Chapter 7: Arrays', link: 'https://drive.google.com/file/d/1gp2k0DkF2hbxjdqtugwfSdnlTBjtFgb3/view?usp=drive_link' },
+                { title: 'Chapter 8: Functions', link: 'https://drive.google.com/file/d/1GJCU_p9KZH1mjTUwchaKQc4Uib5YmMyR/view?usp=drive_link' },
+                { title: 'Chapter 9: Pointers', link: 'https://drive.google.com/file/d/1-IVCsazcBAZJdkuUI1q2AuKydPrCqlEk/view?usp=drive_link' },
+                { title: 'Chapter 10: Structs', link: 'https://drive.google.com/file/d/1-IVCsazcBAZJdkuUI1q2AuKydPrCqlEk/view?usp=drive_link' },
+                { title: 'Chapter 11: Files', link: 'https://drive.google.com/file/d/1l_jPrkLfn7mYi-sqLow5xLn7rheuPS1g/view?usp=drive_link' },
+                { title: 'Chapter 12: Dynamic Memory', link: 'https://drive.google.com/file/d/1SHQywywwrRI-DIiadluxwwHjtBKbOc5/view?usp=drive_link' },
+              ],
+              tds: [
+                { title: 'Set 1', link: 'https://drive.google.com/drive/folders/1pe8Z_rnmyH0twNsPaHQ5laBfo-NdYq9M' },
+                { title: 'Set 2', link: 'https://drive.google.com/drive/folders/1pe8Z_rnmyH0twnsPaHQ5laBfo-NdYq9M' },
+                { title: 'Set 3', link: 'https://drive.google.com/drive/folders/1pe8Z_rnmyH0twnsPaHQ5laBfo-NdYq9M' },
+                { title: 'Set 4', link: DRIVE_ROOT_URL },
+                { title: 'Set 5', link: DRIVE_ROOT_URL },
+                { title: 'Set 6', link: DRIVE_ROOT_URL },
+                { title: 'Set 7', link: DRIVE_ROOT_URL },
+                { title: 'Set 8', link: DRIVE_ROOT_URL },
+                { title: 'Set 9 + 10', link: DRIVE_ROOT_URL },
+                { title: 'Set 11', link: DRIVE_ROOT_URL },
+                { title: 'Set 12', link: DRIVE_ROOT_URL },
+              ]
+            }
           },
           {
             id: 'tech1', name: 'Technical Drawing', code: 'TECH1', coeff: 1, credits: 1,
-            objectives: 'Fundamentals of technical drawing, projections, and standard engineering representations.'
+            objectives: 'Fundamentals of technical drawing, projections, and standard engineering representations.',
+            resources: {
+              courses: [
+                { title: 'Chapter 1: Introduction', link: 'https://drive.google.com/file/d/1UsDGOUt0xBR5KanUu7JTD1w4JiD5xd19/view?usp=drive_link' },
+                { title: 'Chapter 2: Geometric Constructions', link: 'https://drive.google.com/file/d/1bfr66ZHSNrh2-ooZ2w3-1nqiasjPtK9j/view?usp=drive_link' },
+                { title: 'Chapter 3: Projection of Solids', link: 'https://drive.google.com/file/d/14V-bPichy43UhdCYcCO5ujSKLX-jNMKt/view?usp=drive_link' },
+                { title: 'Chapter 4: Perspectives', link: 'https://drive.google.com/file/d/1sSvy5jQZs-ola7hHOBL_UPmqqxah5sn5/view?usp=drive_link' },
+                { title: 'Chapter 5: Cuts and Sections', link: 'https://drive.google.com/file/d/11Ntr1-U3GhuNQGsNfGbDYqpVrcrP6Buw/view?usp=drive_link' },
+              ],
+              tds: [
+                { title: 'Set 2: Geometric Constructions', link: 'https://drive.google.com/file/d/1RXtRM7nM7ImV4zVgLPIIxqGb-snlyiwO/view?usp=drive_link' },
+                { title: 'Set 3: Projection of Solids', link: 'https://drive.google.com/file/d/1njsXlJQATTyM5CG_xyY5TXjn10K4Dlzl/view?usp=drive_link' },
+                { title: 'Set 5: Cuts and Sections', link: 'https://drive.google.com/file/d/1ySQRTNxxK0EAiAF_rDqGCttbvlAJni9H/view?usp=drive_link' },
+              ]
+            }
           },
           {
             id: 'foss', name: 'Free and Open-Source Software', code: 'FOSS', coeff: 1, credits: 1,
-            objectives: 'Introduction to FOSS philosophy, licensing, and usage of open-source tools in engineering.'
+            objectives: 'Introduction to FOSS philosophy, licensing, and usage of open-source tools in engineering.',
+            resources: {
+              courses: [
+                { title: 'History of FOSS', link: DRIVE_ROOT_URL },
+                { title: 'Open Source Licenses', link: DRIVE_ROOT_URL },
+                { title: 'Git & Collaboration', link: DRIVE_ROOT_URL },
+              ],
+              tds: [
+                { title: 'Set 1: History of FOSS', link: DRIVE_ROOT_URL },
+                { title: 'Set 2: Open Source Licenses', link: DRIVE_ROOT_URL },
+                { title: 'Set 3: Git & Collaboration', link: DRIVE_ROOT_URL },
+              ]
+            }
           },
           {
             id: 'hist1', name: 'History of Algeria 1', code: 'HIST1', coeff: 1, credits: 1,
-            objectives: 'Historical context and key events in the history of Algeria.'
+            objectives: 'Historical context and key events in the history of Algeria.',
+            resources: {
+              courses: [
+                { title: 'Topic 1: Ancient History', link: 'https://drive.google.com/file/d/1SN42NLrUNJ6BlyXmekIk0Z4HgQ_5tjgF/view?usp=drive_link' },
+                { title: 'Topic 2: Islamic Era', link: 'https://drive.google.com/file/d/1gNxCvt-PnRh5IVS5muAAJjalL6_ek0K/view?usp=drive_link' },
+                { title: 'Topic 3: Colonial Period', link: 'https://drive.google.com/file/d/1WAGcEu09hSpOtFE0-nHmXAGOI9qvJgE5/view?usp=drive_link' },
+              ],
+              tds: [
+                { title: 'Set 1: Ancient History', link: 'https://drive.google.com/drive/folders/1KLw2t9b0gqPO9uquAgVf65R-z2eb3usq' },
+                { title: 'Set 2: Islamic Era', link: DRIVE_ROOT_URL },
+                { title: 'Set 3: Colonial Period', link: DRIVE_ROOT_URL },
+              ]
+            }
           },
           {
             id: 'eng1', name: 'English 1', code: 'LANG1', coeff: 1, credits: 1,
-            objectives: 'Technical English vocabulary, reading comprehension of scientific texts, and basic communication skills.'
+            objectives: 'Technical English vocabulary, reading comprehension of scientific texts, and basic communication skills.',
+            resources: {
+              courses: [
+                { title: 'Unit 1: Scientific Reading', link: DRIVE_ROOT_URL },
+                { title: 'Unit 2: Technical Writing', link: DRIVE_ROOT_URL },
+              ],
+              tds: [
+                { title: 'Set 1: Scientific Reading', link: DRIVE_ROOT_URL },
+                { title: 'Set 2: Technical Writing', link: DRIVE_ROOT_URL },
+              ]
+            }
           },
         ]
       },
@@ -136,7 +403,12 @@ const studyData: Record<CycleId, CycleData> = {
           },
           {
             id: 'chem2', name: 'Chemistry 2', code: 'CHEM2', coeff: 4, credits: 4,
-            objectives: 'Thermodynamics, first and second laws, entropy, enthalpy, and chemical equilibrium.'
+            objectives: 'Thermodynamics, first and second laws, entropy, enthalpy, and chemical equilibrium.',
+            resources: {
+              tds: [
+                { title: 'Set 1: Thermodynamics', link: 'https://drive.google.com/drive/folders/1g7K-RKwFvj-GHmiYMPM41xWFmGn6Mmhh' },
+              ]
+            }
           },
           {
             id: 'info2', name: 'Algorithms and Data Structures', code: 'INFO2', coeff: 4, credits: 4,
@@ -174,7 +446,12 @@ const studyData: Record<CycleId, CycleData> = {
           },
           {
             id: 'phys3', name: 'Physics 3', code: 'PHYS3', coeff: 4, credits: 4,
-            objectives: 'Vibrations and Waves: Mechanical and electrical oscillations, damped/forced vibrations.'
+            objectives: 'Vibrations and Waves: Mechanical and electrical oscillations, damped/forced vibrations.',
+            resources: {
+              tds: [
+                { title: 'Set 1: Waves', link: 'https://drive.google.com/drive/folders/1g7K-RKwFvj-GHmiYMPM41xWFmGn6Mmhh' },
+              ]
+            }
           },
           {
             id: 'chem3', name: 'Chemistry 3', code: 'CHEM3', coeff: 3, credits: 3,
@@ -258,6 +535,11 @@ const studyData: Record<CycleId, CycleData> = {
     id: 'aes',
     label: 'Autonomous Embedded Systems',
     description: 'Design robust embedded systems for autonomous operation, focusing on firmware, sensors, and real-time processing.',
+    advice: [
+      "Deep dive into C and C++. They are the language of the hardware.",
+      "Understand Real-Time Operating Systems (RTOS) thoroughly; timing is everything in autonomy.",
+      "Get comfortable with debugging low-level hardware issues using oscilloscopes and logic analyzers."
+    ],
     semesters: [
       {
         id: 'aes_s1',
@@ -359,6 +641,11 @@ const studyData: Record<CycleId, CycleData> = {
     id: 'rasd',
     label: 'Robotics & Autonomous Systems Design',
     description: 'Master the design, modeling, and control of intelligent robotic agents, from manipulators to mobile robots.',
+    advice: [
+      "Master Robot Kinematics and Dynamics; they are the foundation of all motion.",
+      "Get proficient with ROS (Robot Operating System) as soon as possible.",
+      "Matrix math and Linear Algebra are used daily in this specialty—keep them sharp."
+    ],
     semesters: [
       {
         id: 'rasd_s1',
@@ -460,6 +747,11 @@ const studyData: Record<CycleId, CycleData> = {
     id: 'usnc',
     label: 'Unmanned Systems Nav & Control',
     description: 'Specialty dealing with the guidance, navigation, and control systems of UAVs and other unmanned vehicles.',
+    advice: [
+      "Master PID and State-Space control early for flight stability.",
+      "Understand GPS and IMU sensor fusion (Kalman Filters) for reliable navigation.",
+      "Study aerodynamics to understand why your control algorithms work (or don't)."
+    ],
     semesters: [
       {
         id: 'usnc_s1',
@@ -562,6 +854,10 @@ const StudyGuide: React.FC = () => {
   const [activeSpecialty, setActiveSpecialty] = useState<CycleId | null>(null);
   const [selectedSemester, setSelectedSemester] = useState<Semester | null>(null);
   const [selectedModule, setSelectedModule] = useState<Module | null>(null);
+  const [activeResourceCategory, setActiveResourceCategory] = useState<'courses' | 'tds' | 'exams' | null>(null);
+  const [showAdvice, setShowAdvice] = useState(false);
+  const [showResult, setShowResult] = useState(false);
+  const [grades, setGrades] = useState<Record<string, { td: string; exam: string }>>({});
 
   // Handle direct navigation from About page
   useEffect(() => {
@@ -575,6 +871,7 @@ const StudyGuide: React.FC = () => {
       // Reset specific selections when navigating from outside
       setSelectedSemester(null);
       setSelectedModule(null);
+      setActiveResourceCategory(null);
     }
   }, [location]);
 
@@ -582,6 +879,8 @@ const StudyGuide: React.FC = () => {
   const resetSelection = () => {
     setSelectedSemester(null);
     setSelectedModule(null);
+    setActiveResourceCategory(null);
+    setShowAdvice(false);
   };
 
   useEffect(() => {
@@ -602,10 +901,13 @@ const StudyGuide: React.FC = () => {
   const handleSemesterClick = (semester: Semester) => {
     setSelectedSemester(semester);
     setSelectedModule(null);
+    setActiveResourceCategory(null);
+    setShowAdvice(false);
   };
 
   const handleModuleClick = (module: Module) => {
     setSelectedModule(module);
+    setActiveResourceCategory(null);
   };
 
   // Determine current active data
@@ -693,67 +995,327 @@ const StudyGuide: React.FC = () => {
       </div>
     );
   };
-
   const renderSemesters = () => {
     if (!activeData) return null;
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-float-in">
-        {activeData.semesters.map((semester) => (
-          <button
-            key={semester.id}
-            onClick={() => handleSemesterClick(semester)}
-            className="glass-panel p-8 rounded-2xl border border-white/5 hover:border-accent-cyan/50 hover:bg-white/5 transition-all group text-left flex flex-col items-start gap-4 relative overflow-hidden"
-          >
-            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-              <Calendar size={100} />
+      <div className="space-y-12 animate-float-in">
+        {selectedSemester || showAdvice ? (
+          <div>
+            {selectedSemester ? renderModules() : renderAdviceDetail()}
+          </div>
+        ) : (
+          <div className="flex flex-col gap-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {activeData.semesters.map((semester) => (
+                <button
+                  key={semester.id}
+                  onClick={() => handleSemesterClick(semester)}
+                  className="glass-panel p-8 rounded-2xl border border-white/5 hover:border-accent-cyan/50 hover:bg-white/5 transition-all group text-left flex flex-col items-start gap-4 relative overflow-hidden"
+                >
+                  <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <Calendar size={100} />
+                  </div>
+
+                  <div className="p-4 rounded-xl bg-accent-cyan/10 text-accent-cyan group-hover:scale-110 transition-transform z-10">
+                    <Calendar size={32} />
+                  </div>
+                  <div className="z-10">
+                    <h3 className="text-xl font-display font-bold text-white group-hover:text-accent-cyan transition-colors">
+                      {semester.title}
+                    </h3>
+                    <p className="text-sm text-gray-400 mt-2">
+                      {semester.modules.length} Modules
+                    </p>
+                  </div>
+                  <div className="mt-auto w-full pt-4 flex justify-end z-10">
+                    <ChevronRight className="text-gray-500 group-hover:text-white transition-colors" />
+                  </div>
+                </button>
+              ))}
             </div>
 
-            <div className="p-4 rounded-xl bg-accent-cyan/10 text-accent-cyan group-hover:scale-110 transition-transform z-10">
-              <Calendar size={32} />
+            {activeData.advice && (
+              <div className="flex justify-center">
+                <button
+                  onClick={() => setShowAdvice(true)}
+                  className="glass-panel p-8 rounded-2xl border border-white/5 hover:border-accent-cyan/50 hover:bg-white/5 transition-all group text-left flex flex-col items-start gap-4 relative overflow-hidden max-w-3xl w-full"
+                >
+                  <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity text-accent-cyan">
+                    <Heart size={100} />
+                  </div>
+
+                  <div className="p-4 rounded-xl bg-accent-cyan/10 text-accent-cyan group-hover:scale-110 transition-transform z-10">
+                    <Heart size={32} />
+                  </div>
+                  <div className="z-10">
+                    <h3 className="text-xl font-display font-bold text-white group-hover:text-accent-cyan transition-colors">
+                      Honest Advice
+                    </h3>
+                    <p className="text-sm text-gray-400 mt-2">
+                      Student honest advices from their experiences, their errors, their successes, to the future students
+                    </p>
+                  </div>
+                  <div className="mt-auto w-full pt-4 flex justify-end z-10">
+                    <ChevronRight className="text-gray-500 group-hover:text-white transition-colors" />
+                  </div>
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const renderAdviceDetail = () => {
+    if (!activeData || !activeData.advice) return null;
+    return (
+      <div className="animate-float-in">
+        <div className="glass-panel p-8 rounded-3xl border border-white/10 relative overflow-hidden bg-accent-cyan/5">
+          <div className="absolute top-0 right-0 p-8 opacity-5 text-accent-cyan">
+            <Heart size={120} />
+          </div>
+          <div className="relative z-10">
+            <div className="flex items-center gap-3 mb-8">
+              <div className="p-2 rounded-lg bg-accent-cyan/10">
+                <Heart className="text-accent-cyan" size={24} />
+              </div>
+              <h3 className="text-2xl font-display font-bold text-white">Student's Honest Advice</h3>
             </div>
-            <div className="z-10">
-              <h3 className="text-xl font-display font-bold text-white group-hover:text-accent-cyan transition-colors">
-                {semester.title}
-              </h3>
-              <p className="text-sm text-gray-400 mt-2">
-                {semester.modules.length} Modules
-              </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {activeData.advice.map((tip, idx) => {
+                const parts = tip.split('\n\n');
+                const name = parts[0];
+                const content = parts.slice(1).join('\n\n');
+
+                return (
+                  <div key={idx} className="p-8 rounded-2xl bg-white/5 border border-white/5 hover:border-accent-cyan/30 transition-all flex flex-col gap-6">
+                    <div className="flex flex-col items-start gap-3">
+                      <div className="w-10 h-10 rounded-full bg-accent-cyan/20 flex items-center justify-center text-accent-cyan text-sm font-bold shrink-0">
+                        {idx + 1}
+                      </div>
+                      <div className="text-accent-cyan font-display font-bold text-xs uppercase tracking-widest opacity-80 pl-1">
+                        {name}
+                      </div>
+                    </div>
+                    <div
+                      className="text-gray-300 text-[15px] leading-relaxed whitespace-pre-wrap font-arabic text-right"
+                      dir="rtl"
+                    >
+                      {content}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
-            <div className="mt-auto w-full pt-4 flex justify-end z-10">
-              <ChevronRight className="text-gray-500 group-hover:text-white transition-colors" />
-            </div>
-          </button>
-        ))}
+          </div>
+        </div>
       </div>
     );
   };
 
   const renderModules = () => {
     if (!selectedSemester) return null;
+
+    const modules = selectedSemester.modules;
+
+    const updateGrade = (moduleId: string, field: 'td' | 'exam', value: string) => {
+      if (value !== '' && !/^\d*\.?\d*$/.test(value)) return;
+      setGrades(prev => ({
+        ...prev,
+        [moduleId]: {
+          ...prev[moduleId],
+          [field]: value
+        }
+      }));
+      setShowResult(false);
+    };
+
+    const handleCalculate = () => {
+      setShowResult(true);
+    };
+
+    // Calculate average
+    let totalWeighted = 0;
+    let totalCoeff = 0;
+    let allFilled = true;
+
+    modules.forEach(mod => {
+      const g = grades[mod.id];
+      const td = g?.td !== undefined && g.td !== '' ? parseFloat(g.td) : NaN;
+      const exam = g?.exam !== undefined && g.exam !== '' ? parseFloat(g.exam) : NaN;
+      if (isNaN(td) || isNaN(exam)) {
+        allFilled = false;
+      } else {
+        const moduleGrade = td * 0.4 + exam * 0.6;
+        totalWeighted += moduleGrade * mod.coeff;
+        totalCoeff += mod.coeff;
+      }
+    });
+
+    const average = totalCoeff > 0 && allFilled ? totalWeighted / totalCoeff : null;
+
+    const getAverageColor = (avg: number) => {
+      if (avg >= 14) return 'text-green-400';
+      if (avg >= 12) return 'text-accent-cyan';
+      if (avg >= 10) return 'text-yellow-400';
+      return 'text-red-400';
+    };
+
+    const getAverageBg = (avg: number) => {
+      if (avg >= 14) return 'bg-green-400/10 border-green-400/30';
+      if (avg >= 12) return 'bg-accent-cyan/10 border-accent-cyan/30';
+      if (avg >= 10) return 'bg-yellow-400/10 border-yellow-400/30';
+      return 'bg-red-400/10 border-red-400/30';
+    };
+
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-float-in">
-        {selectedSemester.modules.map((module) => (
-          <button
-            key={module.id}
-            onClick={() => handleModuleClick(module)}
-            className="glass-panel p-6 rounded-xl border border-white/5 hover:border-accent-purple/50 hover:bg-white/5 transition-all group text-left flex items-start gap-4 h-full relative overflow-hidden"
-          >
-            <div className="p-3 rounded-lg bg-accent-purple/10 text-accent-purple shrink-0 mt-1 z-10">
-              {getModuleIcon(module.name)}
-            </div>
-            <div className="z-10 flex-1">
-              <div className="flex justify-between items-start mb-2">
-                <span className="text-xs font-bold text-gray-500 bg-white/5 px-2 py-0.5 rounded border border-white/5">
-                  {module.code || 'MOD'}
-                </span>
-                {/* Coefficients and Credits removed */}
+      <div className="space-y-10 animate-float-in">
+        {/* Module Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {modules.map((module) => (
+            <button
+              key={module.id}
+              onClick={() => handleModuleClick(module)}
+              className="glass-panel p-6 rounded-xl border border-white/5 hover:border-accent-purple/50 hover:bg-white/5 transition-all group text-left flex items-start gap-4 h-full relative overflow-hidden"
+            >
+              <div className="p-3 rounded-lg bg-accent-purple/10 text-accent-purple shrink-0 mt-1 z-10">
+                {getModuleIcon(module.name)}
               </div>
-              <h3 className="text-lg font-bold text-white group-hover:text-accent-purple transition-colors leading-tight">
-                {module.name}
-              </h3>
+              <div className="z-10 flex-1">
+                <div className="flex justify-between items-start mb-2">
+                  <span className="text-xs font-bold text-gray-500 bg-white/5 px-2 py-0.5 rounded border border-white/5">
+                    {module.code || 'MOD'}
+                  </span>
+                </div>
+                <h3 className="text-lg font-bold text-white group-hover:text-accent-purple transition-colors leading-tight">
+                  {module.name}
+                </h3>
+              </div>
+            </button>
+          ))}
+        </div>
+
+        {/* Calculator Section */}
+        <div className="glass-panel rounded-2xl border border-white/10 overflow-hidden">
+          {/* Calculator Header */}
+          <div className="p-6 border-b border-white/10 bg-accent-purple/5">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-2 rounded-lg bg-accent-purple/10">
+                <Calculator className="text-accent-purple" size={24} />
+              </div>
+              <h3 className="text-xl font-display font-bold text-white">Average Calculator</h3>
             </div>
-          </button>
-        ))}
+            <p className="text-gray-400 text-sm">Formula: <span className="text-accent-cyan font-mono text-xs">Module = TD×0.4 + Exam×0.6</span> &nbsp;|&nbsp; <span className="text-accent-cyan font-mono text-xs">Average = Σ(Grade × Coeff) / Σ(Coeff)</span></p>
+          </div>
+
+          {/* Table */}
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-white/10">
+                  <th className="text-left text-[11px] font-bold text-gray-500 uppercase tracking-wider px-6 py-3">Module</th>
+                  <th className="text-center text-[11px] font-bold text-gray-500 uppercase tracking-wider px-4 py-3 w-20">Coeff</th>
+                  <th className="text-center text-[11px] font-bold text-gray-500 uppercase tracking-wider px-4 py-3 w-24">TD /20</th>
+                  <th className="text-center text-[11px] font-bold text-gray-500 uppercase tracking-wider px-4 py-3 w-24">Exam /20</th>
+                  <th className="text-center text-[11px] font-bold text-gray-500 uppercase tracking-wider px-4 py-3 w-24">Grade</th>
+                </tr>
+              </thead>
+              <tbody>
+                {modules.map((mod, idx) => {
+                  const g = grades[mod.id] || { td: '', exam: '' };
+                  const td = g.td !== '' ? parseFloat(g.td) : NaN;
+                  const exam = g.exam !== '' ? parseFloat(g.exam) : NaN;
+                  const moduleGrade = (!isNaN(td) && !isNaN(exam)) ? (td * 0.4 + exam * 0.6) : null;
+
+                  return (
+                    <tr key={mod.id} className={`border-b border-white/5 hover:bg-white/[0.02] transition-colors ${idx % 2 === 0 ? 'bg-white/[0.01]' : ''}`}>
+                      <td className="px-6 py-3">
+                        <div className="flex items-center gap-3">
+                          <div className="p-1.5 rounded-md bg-accent-purple/10 text-accent-purple shrink-0">
+                            {getModuleIcon(mod.name)}
+                          </div>
+                          <span className="text-sm font-medium text-white truncate">{mod.name}</span>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        <span className="text-sm font-bold text-gray-400">{mod.coeff}</span>
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        <input
+                          type="text"
+                          inputMode="decimal"
+                          value={g.td}
+                          onChange={e => updateGrade(mod.id, 'td', e.target.value)}
+                          placeholder="--"
+                          className="w-16 h-9 rounded-lg bg-black/30 border border-white/10 text-center text-white font-bold text-sm focus:outline-none focus:border-accent-cyan/50 focus:ring-1 focus:ring-accent-cyan/20 transition-all placeholder:text-gray-600 mx-auto"
+                        />
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        <input
+                          type="text"
+                          inputMode="decimal"
+                          value={g.exam}
+                          onChange={e => updateGrade(mod.id, 'exam', e.target.value)}
+                          placeholder="--"
+                          className="w-16 h-9 rounded-lg bg-black/30 border border-white/10 text-center text-white font-bold text-sm focus:outline-none focus:border-accent-purple/50 focus:ring-1 focus:ring-accent-purple/20 transition-all placeholder:text-gray-600 mx-auto"
+                        />
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        <span className={`text-sm font-bold ${moduleGrade !== null
+                          ? moduleGrade >= 10 ? 'text-green-400' : 'text-red-400'
+                          : 'text-gray-600'
+                          }`}>
+                          {moduleGrade !== null ? moduleGrade.toFixed(2) : '--'}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Actions & Result */}
+          <div className="p-6 border-t border-white/10">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="flex gap-3">
+                <button
+                  onClick={handleCalculate}
+                  disabled={!allFilled}
+                  className={`px-6 py-2.5 rounded-xl font-bold text-sm transition-all ${allFilled
+                    ? 'bg-accent-purple text-white hover:bg-accent-purple/80 shadow-lg shadow-accent-purple/20'
+                    : 'bg-white/5 text-gray-500 cursor-not-allowed border border-white/5'
+                    }`}
+                >
+                  Calculate Average
+                </button>
+                <button
+                  onClick={() => { setGrades({}); setShowResult(false); }}
+                  className="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 transition-all text-sm"
+                >
+                  Reset
+                </button>
+              </div>
+
+              {/* Result Display */}
+              {showResult && average !== null && (
+                <div className={`px-6 py-3 rounded-xl border flex items-center gap-4 ${getAverageBg(average)}`}>
+                  <span className="text-sm font-bold text-gray-300">Semester Average:</span>
+                  <span className={`text-3xl font-display font-bold ${getAverageColor(average)}`}>
+                    {average.toFixed(2)}
+                  </span>
+                  <span className="text-xs text-gray-500">/ 20</span>
+                </div>
+              )}
+              {showResult && !allFilled && (
+                <div className="px-6 py-3 rounded-xl border border-red-400/20 bg-red-400/5 text-red-400 text-sm font-medium">
+                  Please fill all TD and Exam fields
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     );
   };
@@ -761,84 +1323,152 @@ const StudyGuide: React.FC = () => {
   const renderResources = () => {
     if (!selectedModule) return null;
 
-    const resourceTypes: { id: string; title: string; icon: React.ReactNode; color: string; desc: string }[] = [
+    const resourceTypes: { id: 'courses' | 'tds' | 'exams'; title: string; icon: React.ReactNode; color: string; desc: string; items?: ResourceItem[] }[] = [
       {
         id: 'courses',
         title: 'Courses',
         icon: <Library size={32} />,
         color: 'text-accent-cyan',
-        desc: 'Lecture notes and summaries'
+        desc: 'Lecture notes and summaries',
+        items: selectedModule.resources?.courses
       },
       {
-        id: 'td',
+        id: 'tds',
         title: 'TDs & Exercises',
         icon: <PenTool size={32} />,
         color: 'text-accent-purple',
-        desc: 'Tutorial series and practice problems'
+        desc: 'Tutorial series and practice problems',
+        items: selectedModule.resources?.tds
       },
       {
         id: 'exams',
         title: 'Exams',
         icon: <FileText size={32} />,
         color: 'text-accent-pink',
-        desc: 'Previous exams and corrections'
-      },
-      {
-        id: 'extra',
-        title: 'Additional Resources',
-        icon: <Video size={32} />,
-        color: 'text-green-400',
-        desc: 'Video tutorials and external links'
-      },
+        desc: 'Previous exams and corrections',
+        items: selectedModule.resources?.exams
+      }
     ];
 
-    return (
-      <div className="space-y-8 animate-float-in">
-        {/* Module Details Header */}
-        <div className="glass-panel p-8 rounded-2xl border border-white/10 relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-8 opacity-5">
-            {getModuleIcon(selectedModule.name)}
-          </div>
-          <div className="relative z-10">
-            <div className="flex flex-wrap items-center gap-4 mb-4">
-              <span className="px-3 py-1 rounded-full bg-accent-cyan/10 text-accent-cyan text-sm font-bold border border-accent-cyan/20">
-                {selectedModule.code || 'MOD'}
-              </span>
-              {/* Coefficients and Credits removed */}
-            </div>
-            <h2 className="text-3xl font-display font-bold text-white mb-6">{selectedModule.name}</h2>
+    // If a category is selected, show the list of items
+    if (activeResourceCategory) {
+      const category = resourceTypes.find(t => t.id === activeResourceCategory);
+      if (!category) return null;
 
-            {selectedModule.objectives && (
-              <div className="bg-white/5 rounded-xl p-6 border border-white/5">
-                <div className="flex items-center gap-2 mb-2 text-gray-300 font-bold">
-                  <Info size={18} />
-                  <span>Module Objectives</span>
+      const items = category.items || [];
+
+      return (
+        <div className="animate-float-in space-y-6">
+          <button
+            onClick={() => setActiveResourceCategory(null)}
+            className="flex items-center gap-2 text-accent-cyan hover:text-white transition-colors mb-4"
+          >
+            <ArrowLeft size={20} /> Back to Categories
+          </button>
+
+          <div className="glass-panel p-8 rounded-2xl border border-white/10">
+            <div className="flex items-center gap-4 mb-8">
+              <div className={`p-4 rounded-full bg-white/5 ${category.color}`}>
+                {category.icon}
+              </div>
+              <div>
+                <h3 className="text-3xl font-display font-bold text-white">{category.title}</h3>
+                <p className="text-gray-400">{selectedModule.name}</p>
+              </div>
+            </div>
+
+            {items.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {items.map((item, idx) => (
+                  <a
+                    key={idx}
+                    href={item.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between p-6 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-accent-cyan/30 transition-all group"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="p-2 rounded-lg bg-black/30 text-gray-400 group-hover:text-white transition-colors">
+                        <FileText size={20} />
+                      </div>
+                      <span className="font-bold text-lg text-gray-200 group-hover:text-white transition-colors">{item.title}</span>
+                    </div>
+                    <ExternalLink size={18} className="text-gray-500 group-hover:text-accent-cyan transition-colors" />
+                  </a>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-16 text-gray-500 border-2 border-dashed border-white/5 rounded-2xl bg-white/[0.02]">
+                <div className="w-16 h-16 rounded-full bg-accent-cyan/10 flex items-center justify-center mx-auto mb-6">
+                  <Calendar className="text-accent-cyan animate-pulse" size={32} />
                 </div>
-                <p className="text-gray-400 leading-relaxed">
-                  {selectedModule.objectives}
-                </p>
+                <h4 className="text-2xl font-display font-bold text-white mb-2">Coming Soon</h4>
+                <p className="text-gray-400 max-w-sm mx-auto"> Our academic team is currently curating the most relevant courses and TDs for this module.</p>
               </div>
             )}
           </div>
         </div>
+      );
+    }
 
-        {/* Resources Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    // Default view: Categories
+    return (
+      <div className="space-y-8 animate-float-in">
+        <div className="glass-panel p-8 rounded-2xl border border-white/10 relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-8 opacity-5">
+            {getModuleIcon(selectedModule.name)}
+          </div>
+          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div>
+              <h2 className="text-3xl font-display font-bold text-white mb-4">{selectedModule.name}</h2>
+              {selectedModule.objectives && (
+                <p className="text-gray-400 max-w-2xl">{selectedModule.objectives}</p>
+              )}
+            </div>
+            <div className="flex gap-4 shrink-0">
+              <div className="px-4 py-2 rounded-xl bg-accent-purple/10 border border-accent-purple/20 text-accent-purple flex flex-col items-center justify-center min-w-[100px]">
+                <span className="text-[10px] font-bold uppercase tracking-widest opacity-60 mb-1">Coefficient</span>
+                <span className="text-2xl font-display font-bold">{selectedModule.coeff}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {resourceTypes.map((type) => (
-            <div
+            <button
               key={type.id}
-              className="glass-panel p-8 rounded-2xl border border-white/5 flex flex-col items-center text-center gap-4 hover:border-white/20 transition-all opacity-80 hover:opacity-100 group"
+              onClick={() => setActiveResourceCategory(type.id)}
+              className="glass-panel p-8 rounded-2xl border border-white/5 flex flex-col items-center text-center gap-4 hover:border-white/20 transition-all opacity-80 hover:opacity-100 group hover:bg-white/5"
             >
               <div className={`p-4 rounded-full bg-white/5 ${type.color} mb-2 group-hover:scale-110 transition-transform`}>
                 {type.icon}
               </div>
-              <h3 className="text-2xl font-display font-bold">{type.title}</h3>
+              <h3 className="text-2xl font-display font-bold text-white group-hover:text-accent-cyan transition-colors">{type.title}</h3>
               <p className="text-gray-400">{type.desc}</p>
-              <div className="mt-4 px-4 py-2 rounded-full border border-white/10 text-sm text-gray-500 bg-black/20">
-                Empty (Coming Soon)
+              <div className="mt-4 px-6 py-2 rounded-full border border-white/10 text-sm font-medium text-white/70 bg-black/20 flex items-center gap-2 group-hover:bg-accent-cyan group-hover:text-black hover:border-accent-cyan transition-all">
+                <BookOpen size={16} />
+                View Content
               </div>
-            </div>
+            </button>
           ))}
+
+          <a
+            href={DRIVE_ROOT_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="glass-panel p-8 rounded-2xl border border-white/5 flex flex-col items-center text-center gap-4 hover:border-white/20 transition-all opacity-80 hover:opacity-100 group hover:bg-white/5"
+          >
+            <div className="p-4 rounded-full bg-white/5 text-green-400 mb-2 group-hover:scale-110 transition-transform">
+              <Video size={32} />
+            </div>
+            <h3 className="text-2xl font-display font-bold text-white group-hover:text-green-400 transition-colors">Additional</h3>
+            <p className="text-gray-400">External resources and videos</p>
+            <div className="mt-4 px-6 py-2 rounded-full border border-white/10 text-sm font-medium text-white/70 bg-black/20 flex items-center gap-2 group-hover:bg-green-400 group-hover:text-black group-hover:border-green-400 transition-all">
+              <ExternalLink size={16} />
+              Open Drive
+            </div>
+          </a>
         </div>
       </div>
     );
@@ -853,7 +1483,7 @@ const StudyGuide: React.FC = () => {
             <div className="p-2 bg-accent-purple/10 rounded-lg">
               <GraduationCap className="text-accent-purple" size={24} />
             </div>
-            <span className="text-accent-purple font-bold tracking-wider uppercase text-sm">Engineering Skills Center</span>
+            <span className="text-accent-purple font-bold tracking-wider uppercase text-sm">Academic Resources</span>
           </div>
           <h1 className="text-4xl md:text-5xl font-display font-bold mb-6">NHSAST <span className="text-gradient">Study Guide</span></h1>
           <p className="text-gray-400 text-lg max-w-2xl">
@@ -866,8 +1496,8 @@ const StudyGuide: React.FC = () => {
           <button
             onClick={() => handleViewModeChange('prep')}
             className={`px-6 py-3 rounded-t-lg font-medium transition-all relative ${viewMode === 'prep'
-                ? 'text-white bg-white/5 border-t border-x border-white/10'
-                : 'text-gray-500 hover:text-white hover:bg-white/5'
+              ? 'text-white bg-white/5 border-t border-x border-white/10'
+              : 'text-gray-500 hover:text-white hover:bg-white/5'
               }`}
           >
             Preparatory Cycle
@@ -876,8 +1506,8 @@ const StudyGuide: React.FC = () => {
           <button
             onClick={() => handleViewModeChange('specs')}
             className={`px-6 py-3 rounded-t-lg font-medium transition-all relative ${viewMode === 'specs'
-                ? 'text-white bg-white/5 border-t border-x border-white/10'
-                : 'text-gray-500 hover:text-white hover:bg-white/5'
+              ? 'text-white bg-white/5 border-t border-x border-white/10'
+              : 'text-gray-500 hover:text-white hover:bg-white/5'
               }`}
           >
             Specialties
@@ -890,13 +1520,15 @@ const StudyGuide: React.FC = () => {
           <div className="flex items-center flex-wrap gap-2 text-sm bg-white/5 p-4 rounded-lg border border-white/10">
             <button
               onClick={() => {
-                if (viewMode === 'specs' && activeSpecialty) {
+                if (viewMode === 'specs') {
                   setActiveSpecialty(null);
-                  resetSelection();
                 }
+                resetSelection();
               }}
-              className={`hover:text-accent-cyan transition-colors ${!activeSpecialty && !selectedSemester ? 'text-accent-cyan font-bold' : 'text-gray-400'}`}
-              disabled={viewMode === 'prep'}
+              className={`hover:text-accent-cyan transition-colors ${(viewMode === 'prep' && !selectedSemester && !showAdvice) || (viewMode === 'specs' && !activeSpecialty && !showAdvice)
+                ? 'text-accent-cyan font-bold'
+                : 'text-gray-400'
+                }`}
             >
               {viewMode === 'prep' ? 'Preparatory Cycle' : 'Specialties'}
             </button>
@@ -906,7 +1538,7 @@ const StudyGuide: React.FC = () => {
                 <ChevronRight size={14} className="text-gray-600" />
                 <button
                   onClick={() => resetSelection()}
-                  className={`hover:text-accent-cyan transition-colors ${!selectedSemester ? 'text-accent-cyan font-bold' : 'text-gray-400'}`}
+                  className={`hover:text-accent-cyan transition-colors ${(!selectedSemester && !showAdvice) ? 'text-accent-cyan font-bold' : 'text-gray-400'}`}
                 >
                   {studyData[activeSpecialty].label}
                 </button>
@@ -925,6 +1557,16 @@ const StudyGuide: React.FC = () => {
               </>
             )}
 
+            {showAdvice && (
+              <>
+                <ChevronRight size={14} className="text-gray-600" />
+                <span className="text-accent-cyan font-bold">
+                  Honest Advice
+                </span>
+              </>
+            )}
+
+
             {selectedModule && (
               <>
                 <ChevronRight size={14} className="text-gray-600" />
@@ -936,13 +1578,15 @@ const StudyGuide: React.FC = () => {
           </div>
 
           {/* Back Buttons for Mobile/Convenience */}
-          {(selectedSemester || selectedModule || (viewMode === 'specs' && activeSpecialty)) && (
+          {(selectedSemester || selectedModule || showAdvice || (viewMode === 'specs' && activeSpecialty)) && (
             <button
               onClick={() => {
                 if (selectedModule) {
                   setSelectedModule(null);
                 } else if (selectedSemester) {
                   setSelectedSemester(null);
+                } else if (showAdvice) {
+                  setShowAdvice(false);
                 } else if (activeSpecialty) {
                   setActiveSpecialty(null);
                 }

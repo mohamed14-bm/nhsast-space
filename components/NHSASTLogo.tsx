@@ -15,60 +15,56 @@ const NHSASTLogo: React.FC<LogoProps> = ({ className = '', size = 'md' }) => {
 
     return (
         <svg
-            viewBox="0 0 320 80"
+            viewBox="0 0 340 85"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
             className={`${heights[size]} w-auto ${className}`}
             aria-label="NHSAST Logo"
         >
             <defs>
-                <linearGradient id="textGradient" x1="0" y1="0" x2="1" y2="1">
+                <linearGradient id="premiumGradient" x1="0%" y1="0%" x2="100%" y2="0%">
                     <stop offset="0%" stopColor="#00F0FF" />
-                    <stop offset="60%" stopColor="#8A2BE2" />
+                    <stop offset="100%" stopColor="#7000FF" />
                 </linearGradient>
             </defs>
 
-            {/* --- Text Only Layout --- */}
-
-            {/* Acronym - Large, Bold, Gradient */}
+            {/* Main Logo Text - NHSAST with premium spacing */}
             <text
                 x="0"
-                y="35"
-                fill="url(#textGradient)"
-                fontFamily="'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
-                fontWeight="900"
-                fontSize="38"
-                letterSpacing="1"
+                y="42"
+                fill="url(#premiumGradient)"
+                fontFamily="'Space Grotesk', 'Inter', 'Segoe UI', sans-serif"
+                fontWeight="800"
+                fontSize="48"
+                letterSpacing="3"
             >
                 NHSAST
             </text>
 
-            {/* English Name - Uppercase, clean white */}
+            {/* Subtitle - SPACE */}
             <text
                 x="2"
-                y="54"
+                y="70"
                 fill="#FFFFFF"
-                fontFamily="'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
-                fontSize="9"
-                fontWeight="600"
-                letterSpacing="0.8"
+                fontFamily="'Space Grotesk', 'Inter', sans-serif"
+                fontSize="16"
+                fontWeight="500"
+                letterSpacing="8"
                 opacity="0.9"
             >
-                NATIONAL HIGHER SCHOOL OF AUTONOMOUS SYSTEMS
+                SPACE
             </text>
 
-            {/* Arabic Name - Standard Font */}
-            <text
-                x="2"
-                y="72"
-                fill="#E2E8F0"
-                fontFamily="'Segoe UI', 'Tahoma', 'Arial', sans-serif"
-                fontSize="11"
-                fontWeight="700"
-                opacity="0.8"
-            >
-                المدرسة الوطنية العليا لتكنولوجيا الأنظمة المستقلة
-            </text>
+            {/* Accent underline */}
+            <line
+                x1="0"
+                y1="76"
+                x2="140"
+                y2="76"
+                stroke="url(#premiumGradient)"
+                strokeWidth="2"
+                opacity="0.5"
+            />
         </svg>
     );
 };

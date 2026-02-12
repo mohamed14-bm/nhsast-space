@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Github, Twitter, Instagram, Mail, Send, ExternalLink, Rocket } from 'lucide-react';
+import { Github, Twitter, Instagram, Mail, Send, ExternalLink, Rocket, Linkedin } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Footer: React.FC = () => {
@@ -51,8 +51,8 @@ const Footer: React.FC = () => {
                 <button
                   type="submit"
                   className={`px-4 py-2.5 rounded-lg font-medium text-sm transition-all flex items-center gap-2 ${subscribed
-                      ? 'bg-green-500/20 text-green-400 border border-green-500/30'
-                      : 'bg-accent-cyan text-black hover:bg-accent-cyan/80'
+                    ? 'bg-green-500/20 text-green-400 border border-green-500/30'
+                    : 'bg-accent-cyan text-black hover:bg-accent-cyan/80'
                     }`}
                 >
                   {subscribed ? '✓' : <Send size={16} />}
@@ -95,49 +95,26 @@ const Footer: React.FC = () => {
           </div>
 
           <div>
-            <h4 className="font-display font-bold text-lg mb-6 text-white">Connect</h4>
-            <div className="flex gap-3 mb-6">
+            <h4 className="font-display font-bold text-lg mb-6 text-white">Connect with Developer</h4>
+            <div className="space-y-4">
               <a
-                href="https://github.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-xl glass-panel flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 hover:scale-110 transition-all"
+                href="mailto:mbennamane4@gmail.com"
+                className="flex items-center gap-2 text-gray-400 hover:text-accent-cyan transition-colors group"
               >
-                <Github size={18} />
+                <Mail size={16} className="group-hover:scale-110 transition-transform" />
+                <span className="text-sm">mbennamane4@gmail.com</span>
               </a>
               <a
-                href="https://twitter.com"
+                href="https://www.linkedin.com/public-profile/settings?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_self_edit_contact-info%3BPk7osluQTUKf1lYfT3oMTg%3D%3D"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-xl glass-panel flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 hover:scale-110 transition-all"
+                className="flex items-center gap-2 text-gray-400 hover:text-accent-cyan transition-colors group"
               >
-                <Twitter size={18} />
+                <Linkedin size={16} className="group-hover:scale-110 transition-transform" />
+                <span className="text-sm">LinkedIn Profile</span>
               </a>
-              <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-xl glass-panel flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 hover:scale-110 transition-all"
-              >
-                <Instagram size={18} />
-              </a>
+
             </div>
-            <a
-              href="mailto:mbennamane4@gmail.com"
-              className="flex items-center gap-2 text-gray-400 hover:text-accent-cyan transition-colors group"
-            >
-              <Mail size={16} className="group-hover:scale-110 transition-transform" />
-              <span className="text-sm">mbennamane4@gmail.com</span>
-            </a>
-            <a
-              href="http://www.enstsa.edu.dz"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 text-gray-400 hover:text-accent-purple transition-colors group mt-3"
-            >
-              <ExternalLink size={16} className="group-hover:scale-110 transition-transform" />
-              <span className="text-sm">Official NHSAST Website</span>
-            </a>
           </div>
         </div>
 

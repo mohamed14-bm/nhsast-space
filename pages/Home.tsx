@@ -98,6 +98,10 @@ const Home: React.FC = () => {
               Academic Year 2025-2026
             </div>
 
+            <div className="text-accent-cyan font-display font-bold text-xl md:text-2xl mb-4 tracking-tight animate-fade-in">
+              Welcome to NHSAST Space
+            </div>
+
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-display font-bold leading-tight mb-8">
               Innovation for the <br />
               <span className="text-gradient relative">
