@@ -190,16 +190,16 @@ const studyData: Record<CycleId, CycleData> = {
             objectives: 'Real numbers, sequences, limits, continuity, differentiability, and expansion formulations.',
             resources: {
               courses: [
-                { title: 'Chapter 1: Real Numbers', link: 'https://drive.google.com/file/d/1k_5YTfqCUMVnZQZhrQzkPXgnHv4NBS0d/view?usp=drive_link' },
-                { title: 'Chapter 2: Sequences', link: 'https://drive.google.com/file/d/15CemQlGCcKe_UBE7u97QII5yKDd1pgM6/view?usp=drive_link' },
-                { title: 'Chapter 3: Functions', link: 'https://drive.google.com/file/d/1eACRwliqSHidgoZ6-EQiZedK-VATARuC/view?usp=drive_link' },
-                { title: 'Chapter 4: Elementary Functions', link: 'https://drive.google.com/file/d/1Lqy1Gec5JO2AfAm2B57kVeAQwcbadQt6/view?usp=drive_link' },
+                { title: 'Chapter 1: Real Numbers', link: '/cours/analysis/chapter 1 real number.pdf' },
+                { title: 'Chapter 2: Sequences', link: '/cours/analysis/chapter 2 sequnces.pdf' },
+                { title: 'Chapter 3: Functions', link: '/cours/analysis/chapter 3 functoins.pdf' },
+                { title: 'Chapter 4: Elementary Functions', link: '/cours/analysis/chapter 4 elementry Fonctions.pdf' },
               ],
               tds: [
-                { title: 'Set 1: Real Numbers', link: 'https://drive.google.com/file/d/1bzQvlbSDb7vvRaobeX_UagBV-HmgxaJ0/view?usp=drive_link' },
-                { title: 'Set 2: Sequences', link: 'https://drive.google.com/file/d/1VcSdF96lTxBnSCvLcd5rT9675CQln4Bl/view?usp=drive_link' },
-                { title: 'Set 3: Functions', link: 'https://drive.google.com/drive/folders/1hHBVrNYhcy-XgPu3phQLeHPy9tZTAMaL' },
-                { title: 'Set 4: Elementary Functions', link: 'https://drive.google.com/drive/folders/1hHBVrNYhcy-XgPu3phQLeHPy9tZTAMaL' },
+                { title: 'Set 1: Real Numbers', link: '/td/analysis/série 1 poly.pdf' },
+                { title: 'Set 2: Sequences', link: '/td/analysis/series 2 sequnces.pdf' },
+                { title: 'Set 3: Functions', link: '/td/analysis/Serie 3 2025.pdf' },
+                { title: 'Set 4: Elementary Functions', link: '/td/analysis/Série Elementary functions.pdf' },
               ]
             }
           },
@@ -208,18 +208,18 @@ const studyData: Record<CycleId, CycleData> = {
             objectives: 'Logic, sets, maps, algebraic structures (groups, rings, fields), polynomials, and rational fractions.',
             resources: {
               courses: [
-                { title: 'Chapter 1: Logic', link: 'https://drive.google.com/file/d/1WDZCL2SWAViR9zacAVp9SBY2jT3dE2gI/view?usp=drive_link' },
-                { title: 'Chapter 2: Sets and Maps', link: 'https://drive.google.com/file/d/1LHtUA9buxC5CIt06MP2Mo3TkbvhyCdXl/view?usp=drive_link' },
-                { title: 'Chapter 3: Binary Operations', link: 'https://drive.google.com/file/d/1VPBQzUMVb0D6rH-NKFalS-qbkmSNRF6J/view?usp=drive_link' },
-                { title: 'Chapter 4: Algebraic Structures', link: 'https://drive.google.com/file/d/1xacKyVsmDW7AEnmWz0gONPe1JM6biwDk/view?usp=drive_link' },
-                { title: 'Chapter 5: Polynomes', link: 'https://drive.google.com/file/d/1nKLrtxCDv98ZRKQHDZIYqNxem2vf0bEi/view?usp=drive_link' },
+                { title: 'Chapter 1: Logic', link: '/cours/algebra/chapter 1 logic.pdf' },
+                { title: 'Chapter 2: Sets and Maps', link: '/cours/algebra/chapter  2 Sets and maps.pdf' },
+                { title: 'Chapter 3: Binary Operations', link: '/cours/algebra/chapter  3 binary relations.pdf' },
+                { title: 'Chapter 4: Algebraic Structures', link: '/cours/algebra/chapter 4 Algebraic stucture.pdf' },
+                { title: 'Chapter 5: Polynomes', link: '/cours/algebra/chapter 5 polynomes.pdf' },
               ],
               tds: [
-                { title: 'Set 1: Logic', link: 'https://drive.google.com/file/d/1BXJhv7LO8bEOM6_tRr9hz9CsgJi4KP4I/view?usp=drive_link' },
-                { title: 'Set 2: Sets and Maps', link: 'https://drive.google.com/file/d/1BFVrtPV6PMbIsJ_Kwy-A8cq47Zi1LnZo/view?usp=drive_link' },
-                { title: 'Set 3: Binary Operations', link: 'https://drive.google.com/file/d/1JJ-f_ys1YH7CYQDJpWZ0eJgZ65ncprOF/view?usp=drive_link' },
-                { title: 'Set 4: Algebraic Structures', link: 'https://drive.google.com/file/d/1UZ10j92iPwmmdiiJKNa4YsQPP2U28Jyp/view?usp=drive_link' },
-                { title: 'Set 5: Polynomes', link: 'https://drive.google.com/file/d/1n_G5KV1V1i6M8OPpgb22OgIxQ_RW4Stf/view?usp=drive_link' },
+                { title: 'Set 1: Logic', link: '/td/algebra/serie1-Logique (2) poly.pdf' },
+                { title: 'Set 2: Sets and Maps', link: '/td/algebra/serie2-Applications (1) poly.pdf' },
+                { title: 'Set 3: Binary Operations', link: '/td/algebra/003.pdf' },
+                { title: 'Set 4: Algebraic Structures', link: '/td/algebra/004.pdf' },
+                { title: 'Set 5: Polynomes', link: '/td/algebra/Poly-33.pdf' },
               ]
             }
           },
@@ -228,14 +228,14 @@ const studyData: Record<CycleId, CycleData> = {
             objectives: 'Descriptive statistics, probability spaces, conditional probability, and random variables.',
             resources: {
               courses: [
-                { title: 'Chapter 1: Statistical series with one variable', link: 'https://drive.google.com/file/d/1cMt_m3etqv2OVrShQQEVWUEZggUOH2F6/view?usp=drive_link' },
-                { title: 'Chapter 2: Statistical series with two variables', link: 'https://drive.google.com/file/d/19z0hViWGWLDUFCc-hKgEdRkYQV-HGzVo/view?usp=drive_link' },
-                { title: 'Chapter 3: Combinatorics & Probability', link: 'https://drive.google.com/drive/folders/1HxxuEh9wQb8ol7OrTSTYCdWI06AH5hH1' },
+                { title: 'Chapter 1: Statistical series with one variable', link: '/cours/stats/chapter 1 statistics with one character.pdf' },
+                { title: 'Chapter 2: Statistical series with two variables', link: '/cours/stats/chapter 2 Statistical series with two characters.pdf' },
+                { title: 'Chapter 3: Combinatorics & Probability', link: '/cours/stats/chapter 3 Combinatorics Probability.pdf' },
               ],
               tds: [
-                { title: 'Set 1: Statistical series with one variable', link: 'https://drive.google.com/drive/folders/1yS2PkOPpfbKizMLuEIIQdXSqgd2DagXr' },
-                { title: 'Set 2: Statistical series with two variables', link: 'https://drive.google.com/file/d/12kcvlCvQqBMM7gv1W6PyjsxNx75H5zu4/view?usp=drive_link' },
-                { title: 'Set 3: Combinatorics & Probability', link: 'https://drive.google.com/file/d/1OhRi2mBpoczvd1CqnlN7Av1cUhR9Ucuh/view?usp=drive_link' },
+                { title: 'Set 1: Statistical series with one variable', link: '/td/stats/set 2.pdf' },
+                { title: 'Set 2: Statistical series with two variables', link: '/td/stats/set 2.pdf' },
+                { title: 'Set 3: Combinatorics & Probability', link: '/td/stats/Problems_sheet_N03.pdf' },
               ]
             }
           },
@@ -244,19 +244,16 @@ const studyData: Record<CycleId, CycleData> = {
             objectives: 'Kinematics, dynamics of point masses, work, energy, and momentum conservation laws.',
             resources: {
               courses: [
-                { title: 'Chapter 1: Mechanics Introduction', link: 'https://drive.google.com/file/d/1w9wvXiNUUci-oE1kFj4sEbEXNqCGUkqV/view?usp=drive_link' },
-                { title: 'Chapter 2: Kinetics', link: 'https://drive.google.com/file/d/10LrLISG_unBlrtDiJQLBHq8DU-T6c_6t/view?usp=drive_link' },
-                { title: 'Chapter 3: Kinematics of a Particle', link: 'https://drive.google.com/file/d/1FDU_jcRRVRcUAVfk5WjoRbuoB31cpIf1/view?usp=drive_link' },
-                { title: 'Chapter 4: Work and Energy', link: 'https://drive.google.com/file/d/1L57wfTpeo770Ok8eA7YhuMSF3k1pPasp/view?usp=drive_link' },
-                { title: 'Chapter 5: Collisions', link: 'https://drive.google.com/file/d/1tWcMZWsumfsCOLXr0lzuDNnY2hWD5yt-/view?usp=drive_link' },
-                { title: 'Chapter 6: Rotation', link: 'https://drive.google.com/file/d/1RjBDcU4B5AS2lMjZwjkF4gj2pTNf_U_S/view?usp=drive_link' },
+                { title: 'Chapter 2: Kinetics', link: '/cours/physic/chapter 2 knitics.pdf' },
+                { title: 'Chapter 3: Kinematics of a Particle', link: '/cours/physic/chapter 3 Kinematics of a Particle.pdf' },
+                { title: 'Chapter 4: Work and Energy', link: '/cours/physic/chapter 4 work and enrgy.pdf' },
+                { title: 'Chapter 5: Collisions', link: '/cours/physic/Chapter 5 Collisions.pdf' },
               ],
               tds: [
-                { title: 'Set 1: Mechanics', link: 'https://drive.google.com/drive/folders/1g7K-RKwFvj-GHmiYMPM41xWFmGn6Mmhh' },
-                { title: 'Set 2: Kinetics', link: 'https://drive.google.com/file/d/1zctZKgb-DCK69mpo3IzNGZd6x4K8zOTZ/view?usp=drive_link' },
-                { title: 'Set 3: Kinematics of a Particle', link: 'https://drive.google.com/file/d/1Z5ucyJG8yIdt6-LbJXl0KpWk0abBONIw/view?usp=drive_link' },
-                { title: 'Set 4: Work and Energy', link: DRIVE_ROOT_URL },
-                { title: 'Set 5: Collisions', link: DRIVE_ROOT_URL },
+                { title: 'Set 1: Mechanics', link: '/td/physic/Doc Dec 14 2025 19.51.pdf' },
+                { title: 'Set 2: Kinetics', link: '/td/physic/physics_correction.pdf' },
+                { title: 'Set 3: Kinematics of a Particle', link: '/td/physic/Test1.pdf' },
+                { title: 'Set 4: Work and Energy', link: '/td/physic/physics_correction work.pdf' },
               ]
             }
           },
@@ -265,20 +262,19 @@ const studyData: Record<CycleId, CycleData> = {
             objectives: 'Structure of matter, atomistic theory, periodic table, chemical bonding, and molecular structure.',
             resources: {
               courses: [
-                { title: 'Chapter 1', link: 'https://drive.google.com/drive/folders/1tClaiMRU4ZChMmY6gBYrjSMeZbAfclcD' },
-                { title: 'Chapter 2', link: DRIVE_ROOT_URL },
-                { title: 'Chapter 3', link: DRIVE_ROOT_URL },
-                { title: 'Chapter 4', link: DRIVE_ROOT_URL },
-                { title: 'Chapter 5', link: DRIVE_ROOT_URL },
-                { title: 'Chapter 6', link: DRIVE_ROOT_URL },
+                { title: 'Chapter 1', link: '/cours/chemistry/chapter 1 FUNDAMENTAL CONCEPTS.pdf' },
+                { title: 'Chapter 2', link: '/cours/chemistry/chapter 2.pdf' },
+                { title: 'Chapter 4', link: '/cours/chemistry/chapter 4 Introduction to Quantum Mechanics – The Schrödinger Equation.pdf' },
+                { title: 'Chapter 5', link: '/cours/chemistry/chapter 5 ELECTRONIC CONFIGURATIONS AND PERIODIC PROPERTIES OF ELEMENTS.pdf' },
+                { title: 'Chapter 6', link: '/cours/chemistry/chapter 6 Chemical bonding and the structure of molecules.pdf' },
               ],
               tds: [
-                { title: 'Set 1', link: 'https://drive.google.com/drive/folders/1tClaiMRU4ZChMmY6gBYrjSMeZbAfclcD' },
-                { title: 'Set 2', link: DRIVE_ROOT_URL },
-                { title: 'Set 3', link: DRIVE_ROOT_URL },
-                { title: 'Set 4', link: DRIVE_ROOT_URL },
-                { title: 'Set 5', link: DRIVE_ROOT_URL },
-                { title: 'Set 6', link: DRIVE_ROOT_URL },
+                { title: 'Set 1', link: '/td/chemistry/001.pdf' },
+                { title: 'Set 2', link: '/td/chemistry/002.pdf' },
+                { title: 'Set 3', link: '/td/chemistry/003.pdf' },
+                { title: 'Set 4', link: '/td/chemistry/SET 4.pdf' },
+                { title: 'Set 5', link: '/td/chemistry/SET 5.jpg' },
+                { title: 'Set 6', link: '/td/chemistry/SET 6 (1).pdf' },
               ]
             }
           },
@@ -287,31 +283,26 @@ const studyData: Record<CycleId, CycleData> = {
             objectives: 'Introduction to algorithmic thinking, variables, loops, arrays, and basic programming logic.',
             resources: {
               courses: [
-                { title: 'Chapter 1: Introduction', link: 'https://drive.google.com/file/d/1rqnx-gQyNOykyre_XIAsj7hlPrKvorTx/view?usp=drive_link' },
-                { title: 'Chapter 2: Algorithms', link: 'https://drive.google.com/file/d/1xRsAepKK8EPjFeZAWITKVn8yp6lw1vm7/view?usp=drive_link' },
-                { title: 'Chapter 3: Languages', link: 'https://drive.google.com/file/d/1cYhPni6XD5zha0_5vk9E4_6ilOuvSyD4/view?usp=drive_link' },
-                { title: 'Chapter 4: Variables', link: 'https://drive.google.com/file/d/1w3alJJDzKtswBqBLY-UkX1Mrlog6UeG4/view?usp=drive_link' },
-                { title: 'Chapter 5: Instructions', link: 'https://drive.google.com/file/d/1HJXLnGen-0gMesyAOkHNOynzyvFXwRz/view?usp=drive_link' },
-                { title: 'Chapter 6: Structure', link: 'https://drive.google.com/file/d/1zvkEQUCjvAP_vatStMA-Xba-bLmki7Jd/view?usp=drive_link' },
-                { title: 'Chapter 7: Arrays', link: 'https://drive.google.com/file/d/1gp2k0DkF2hbxjdqtugwfSdnlTBjtFgb3/view?usp=drive_link' },
-                { title: 'Chapter 8: Functions', link: 'https://drive.google.com/file/d/1GJCU_p9KZH1mjTUwchaKQc4Uib5YmMyR/view?usp=drive_link' },
-                { title: 'Chapter 9: Pointers', link: 'https://drive.google.com/file/d/1-IVCsazcBAZJdkuUI1q2AuKydPrCqlEk/view?usp=drive_link' },
-                { title: 'Chapter 10: Structs', link: 'https://drive.google.com/file/d/1-IVCsazcBAZJdkuUI1q2AuKydPrCqlEk/view?usp=drive_link' },
-                { title: 'Chapter 11: Files', link: 'https://drive.google.com/file/d/1l_jPrkLfn7mYi-sqLow5xLn7rheuPS1g/view?usp=drive_link' },
-                { title: 'Chapter 12: Dynamic Memory', link: 'https://drive.google.com/file/d/1SHQywywwrRI-DIiadluxwwHjtBKbOc5/view?usp=drive_link' },
+                { title: 'Chapter 1: Introduction', link: '/cours/cs/chapter 01.pdf' },
+                { title: 'Chapter 2: Algorithms', link: '/cours/cs/chapter 02.pdf' },
+                { title: 'Chapter 3: Languages', link: '/cours/cs/chapter 03.pdf' },
+                { title: 'Chapter 4: Variables', link: '/cours/cs/chapter 04.pdf' },
+                { title: 'Chapter 5: Instructions', link: '/cours/cs/chapter 05.pdf' },
+                { title: 'Chapter 6: Structure', link: '/cours/cs/chapter 06.pdf' },
+                { title: 'Chapter 7: Arrays', link: '/cours/cs/chapter 07.pdf' },
+                { title: 'Chapter 8: Functions', link: '/cours/cs/Chapter 08.pdf' },
+                { title: 'Chapter 9: Pointers', link: '/cours/cs/chapter 9+10.pdf' },
+                { title: 'Chapter 10: Structs', link: '/cours/cs/chapter 9+10.pdf' },
+                { title: 'Chapter 11: Files', link: '/cours/cs/Chapter 11.pdf' },
+                { title: 'Chapter 12: Dynamic Memory', link: '/cours/cs/chapter 12.pdf' },
               ],
               tds: [
-                { title: 'Set 1', link: 'https://drive.google.com/drive/folders/1pe8Z_rnmyH0twNsPaHQ5laBfo-NdYq9M' },
-                { title: 'Set 2', link: 'https://drive.google.com/drive/folders/1pe8Z_rnmyH0twnsPaHQ5laBfo-NdYq9M' },
-                { title: 'Set 3', link: 'https://drive.google.com/drive/folders/1pe8Z_rnmyH0twnsPaHQ5laBfo-NdYq9M' },
-                { title: 'Set 4', link: DRIVE_ROOT_URL },
-                { title: 'Set 5', link: DRIVE_ROOT_URL },
-                { title: 'Set 6', link: DRIVE_ROOT_URL },
-                { title: 'Set 7', link: DRIVE_ROOT_URL },
-                { title: 'Set 8', link: DRIVE_ROOT_URL },
-                { title: 'Set 9 + 10', link: DRIVE_ROOT_URL },
-                { title: 'Set 11', link: DRIVE_ROOT_URL },
-                { title: 'Set 12', link: DRIVE_ROOT_URL },
+                { title: 'Set 1', link: '/td/cs/PW-1 Basic actions.pdf' },
+                { title: 'Set 2', link: '/td/cs/PW-2 Conditional statements.pdf' },
+                { title: 'Set 3', link: '/td/cs/DW-3 Conditional statements.pdf' },
+                { title: 'Set 4', link: '/td/cs/DW-4 Iterative structures.pdf' },
+                { title: 'Midterm Exam', link: '/td/cs/MidTerm S1 11-12-2024F.pdf' },
+                { title: 'Practical Test', link: '/td/cs/Pratical test S1-2024-2025F.pdf' },
               ]
             }
           },
@@ -320,16 +311,15 @@ const studyData: Record<CycleId, CycleData> = {
             objectives: 'Fundamentals of technical drawing, projections, and standard engineering representations.',
             resources: {
               courses: [
-                { title: 'Chapter 1: Introduction', link: 'https://drive.google.com/file/d/1UsDGOUt0xBR5KanUu7JTD1w4JiD5xd19/view?usp=drive_link' },
-                { title: 'Chapter 2: Geometric Constructions', link: 'https://drive.google.com/file/d/1bfr66ZHSNrh2-ooZ2w3-1nqiasjPtK9j/view?usp=drive_link' },
-                { title: 'Chapter 3: Projection of Solids', link: 'https://drive.google.com/file/d/14V-bPichy43UhdCYcCO5ujSKLX-jNMKt/view?usp=drive_link' },
-                { title: 'Chapter 4: Perspectives', link: 'https://drive.google.com/file/d/1sSvy5jQZs-ola7hHOBL_UPmqqxah5sn5/view?usp=drive_link' },
-                { title: 'Chapter 5: Cuts and Sections', link: 'https://drive.google.com/file/d/11Ntr1-U3GhuNQGsNfGbDYqpVrcrP6Buw/view?usp=drive_link' },
+                { title: 'Chapter 1: Intro to Tech Drawing', link: '/cours/tech drawig/chapitre I_Cours de dessin Technique (1) (1).pdf' },
+                { title: 'Chapter 2: Geometric Constructions', link: '/cours/tech drawig/Chapter 2   Geometric Constructions.pdf' },
+                { title: 'Chapter 3: Projection of Solids', link: '/cours/tech drawig/chapitre III-PROJECTION OF  SOLIDS  2025.pdf' },
+                { title: 'Chapter 4: Perspectives', link: '/cours/tech drawig/Chapter IV  The perspectives.pdf' },
+                { title: 'Chapter 5: Cuts and Sections', link: '/cours/tech drawig/Chaptre V   Cuts and Sections pps.pdf' },
               ],
               tds: [
-                { title: 'Set 2: Geometric Constructions', link: 'https://drive.google.com/file/d/1RXtRM7nM7ImV4zVgLPIIxqGb-snlyiwO/view?usp=drive_link' },
-                { title: 'Set 3: Projection of Solids', link: 'https://drive.google.com/file/d/1njsXlJQATTyM5CG_xyY5TXjn10K4Dlzl/view?usp=drive_link' },
-                { title: 'Set 5: Cuts and Sections', link: 'https://drive.google.com/file/d/1ySQRTNxxK0EAiAF_rDqGCttbvlAJni9H/view?usp=drive_link' },
+                { title: 'Set 2: Geometric Constructions', link: '/td/tech drawig/Exercises  Geometric construction  serie 2 .pdf' },
+                { title: 'Set 3: Projection of Solids', link: '/td/tech drawig/projection of solids.pdf' },
               ]
             }
           },
@@ -354,14 +344,12 @@ const studyData: Record<CycleId, CycleData> = {
             objectives: 'Historical context and key events in the history of Algeria.',
             resources: {
               courses: [
-                { title: 'Topic 1: Ancient History', link: 'https://drive.google.com/file/d/1SN42NLrUNJ6BlyXmekIk0Z4HgQ_5tjgF/view?usp=drive_link' },
-                { title: 'Topic 2: Islamic Era', link: 'https://drive.google.com/file/d/1gNxCvt-PnRh5IVS5muAAJjalL6_ek0K/view?usp=drive_link' },
-                { title: 'Topic 3: Colonial Period', link: 'https://drive.google.com/file/d/1WAGcEu09hSpOtFE0-nHmXAGOI9qvJgE5/view?usp=drive_link' },
+                { title: 'Topic 1: 300 Years of Sovereignty', link: '/cours/history of algeria/تاريخ 1.pdf' },
+                { title: 'Topic 2: Lesson 2', link: '/cours/history of algeria/درس2 تاريخ.pdf' },
+                { title: 'Topic 3: Lesson 3', link: '/cours/history of algeria/محور3 تاريخ.pdf' },
               ],
               tds: [
                 { title: 'Set 1: Ancient History', link: 'https://drive.google.com/drive/folders/1KLw2t9b0gqPO9uquAgVf65R-z2eb3usq' },
-                { title: 'Set 2: Islamic Era', link: DRIVE_ROOT_URL },
-                { title: 'Set 3: Colonial Period', link: DRIVE_ROOT_URL },
               ]
             }
           },

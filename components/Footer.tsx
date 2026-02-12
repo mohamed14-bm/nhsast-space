@@ -105,7 +105,7 @@ const Footer: React.FC = () => {
                 <span className="text-sm">mbennamane4@gmail.com</span>
               </a>
               <a
-                href="https://www.linkedin.com/public-profile/settings?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_self_edit_contact-info%3BPk7osluQTUKf1lYfT3oMTg%3D%3D"
+                href="https://www.linkedin.com/in/mohamed-bennamane-22402b264/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 text-gray-400 hover:text-accent-cyan transition-colors group"
