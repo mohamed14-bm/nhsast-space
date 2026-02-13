@@ -1,6 +1,11 @@
 {
   "redirects": [
     {
+      "source": "/",
+      "destination": "https://nhsast-space.vercel.app",
+      "permanent": true
+    },
+    {
       "source": "/(.*)",
       "destination": "https://nhsast-space.vercel.app/$1",
       "permanent": true
