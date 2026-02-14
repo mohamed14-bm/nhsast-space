@@ -397,77 +397,62 @@ const Resources: React.FC = () => {
     setIsSubmitting(true);
     setSubmitStatus('idle');
 
-    // For PDF uploads on static sites, Formspree (paid) or a custom backend is needed.
-    // For the free version of Formspree, we can send the text data.
-    // However, since we want a robust solution, we'll try to use Formspree's endpoint structure.
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwpWUS5rusIGTMsaf9nUhJyl0VO7e-I1jlheSECuEm9YOAOWDj-mNFfDxPSS_azwyHHuw/exec';
+
+    const readFileAsDataURL = (file: File): Promise<string> => {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = error => reject(error);
+        reader.readAsDataURL(file);
+      });
+    };
 
     try {
-      // NOTE: User should replace 'YOUR_FORMSPREE_ID' with their actual Formspree ID
-      // To get one: Go to formspree.io, create a form, and copy the ID.
-      // Fallback: If no ID, we use the mailto method as a reliable fallback.
-
-      const formData = new FormData();
-      formData.append('Name', contribution.name);
-      formData.append('Contact', contribution.contact);
-      formData.append('Category', contribution.category);
-      formData.append('Title', contribution.title);
-      formData.append('Type', submissionType);
+      let payload: any = {
+        name: contribution.name,
+        email: contribution.contact, // Mapping contact field to 'email' for your script
+        category: contribution.category,
+        title: contribution.title,
+        type: submissionType
+      };
 
       if (submissionType === 'text') {
-        formData.append('Content', contribution.content);
+        payload.content = contribution.content;
+        payload.fileData = ""; // Avoid crashes in your script if fileData is missing
       } else {
-        // PDF handles differently in static forms without a real backend
-        // We'll append the file if it exists
         const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
-        if (fileInput?.files?.[0]) {
-          formData.append('document', fileInput.files[0]);
+        const file = fileInput?.files?.[0];
+        if (file) {
+          payload.fileData = await readFileAsDataURL(file); // Sends the full data:application/pdf;base64,...
+          payload.fileName = file.name;
         }
       }
 
-      // We use the user's email as the target via Formspree
-      // If the user hasn't set up Formspree, we fallback to mailto for now 
-      // but prepare the code for a real submission.
-
-      /* 
-      // REAL AJAX SUBMISSION (Uncomment and replace ID when ready)
-      const response = await fetch('https://formspree.io/f/YOUR_ID', {
+      const response = await fetch(SCRIPT_URL, {
         method: 'POST',
-        body: formData,
         headers: {
-          'Accept': 'application/json'
-        }
+          'Content-Type': 'text/plain;charset=utf-8',
+        },
+        body: JSON.stringify(payload),
       });
-      if (response.ok) {
+
+      const result = await response.json();
+
+      if (result.status === "success") {
         setSubmitStatus('success');
         setContribution({ name: '', contact: '', title: '', category: 'Arduino Basics', content: '', fileName: '' });
       } else {
         setSubmitStatus('error');
       }
-      */
 
-      // FALLBACK TO MAILTO if no backend is configured yet
-      const subject = encodeURIComponent(`Article Submission: ${contribution.title}`);
-      let bodyText = `Author Name: ${contribution.name}\n` +
-        `Contact Info: ${contribution.contact}\n` +
-        `Category: ${contribution.category}\n` +
-        `Title: ${contribution.title}\n\n`;
-
-      if (submissionType === 'pdf') {
-        bodyText += `--- Submission Method: PDF ATTACHMENT ---\n\n` +
-          `IMPORTANT: Please attach your PDF file named [${contribution.fileName || 'your_article.pdf'}] to this email before sending.`;
-      } else {
-        bodyText += `--- Article Body ---\n\n` +
-          `${contribution.content}`;
-      }
-
-      const body = encodeURIComponent(bodyText);
-      window.location.href = `mailto:mbennamane4@gmail.com?subject=${subject}&body=${body}`;
-
-      setSubmitStatus('success');
-      // Reset after a delay
-      setTimeout(() => setIsSubmitting(false), 2000);
+      setTimeout(() => {
+        setIsSubmitting(false);
+        setSubmitStatus('idle');
+      }, 5000);
 
     } catch (error) {
+      console.error('Submission error:', error);
       setSubmitStatus('error');
       setIsSubmitting(false);
     }
@@ -836,7 +821,7 @@ const Resources: React.FC = () => {
                       </div>
                     </div>
                     <p className="text-xs text-accent-purple mt-3 font-medium italic">
-                      Note: You will need to manually attach the file to the email that opens after clicking submit.
+                      Note: Your file will be securely uploaded to our drive.
                     </p>
                   </div>
                 )}
@@ -845,10 +830,10 @@ const Resources: React.FC = () => {
                   type="submit"
                   disabled={isSubmitting}
                   className={`w-full py-4 rounded-xl text-white font-bold transition-all flex items-center justify-center gap-2 group ${submitStatus === 'success'
-                      ? 'bg-green-500'
-                      : submitStatus === 'error'
-                        ? 'bg-red-500'
-                        : 'bg-gradient-to-r from-accent-cyan to-accent-purple hover:opacity-90'
+                    ? 'bg-green-500'
+                    : submitStatus === 'error'
+                      ? 'bg-red-500'
+                      : 'bg-gradient-to-r from-accent-cyan to-accent-purple hover:opacity-90'
                     }`}
                 >
                   {isSubmitting ? (
@@ -870,7 +855,7 @@ const Resources: React.FC = () => {
 
                 {submitStatus === 'success' && (
                   <p className="text-center text-sm text-green-400 animate-fade-in">
-                    {submissionType === 'pdf' ? "Email client opened. Don't forget to attach your file!" : "Thank you! Your article has been submitted."}
+                    Thank you! Your article has been submitted and saved.
                   </p>
                 )}
               </form>

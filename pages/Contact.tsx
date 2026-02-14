@@ -15,30 +15,40 @@ const Contact: React.FC = () => {
     document.title = "Contact | NHSAST Space - Get in Touch";
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitStatus('idle');
 
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzkII-uUGP56exNbtFkDGqSQSH2GUbdEmW2fwJLuvvMTNUX0SyGm1DMw9CiXdZI5YhH4Q/exec';
+
     try {
-      const subject = encodeURIComponent(`Contact Inquiry from ${formData.firstName} ${formData.lastName}`);
-      const body = encodeURIComponent(
-        `Name: ${formData.firstName} ${formData.lastName}\n` +
-        `Email: ${formData.email}\n` +
-        `Message:\n${formData.message}`
-      );
+      const response = await fetch(SCRIPT_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'text/plain;charset=utf-8', // Use text/plain to avoid CORS preflight which GAS doesn't handle well
+        },
+        body: JSON.stringify(formData),
+      });
 
-      window.location.href = `mailto:mbennamane4@gmail.com?subject=${subject}&body=${body}`;
+      const result = await response.json();
 
-      setSubmitStatus('success');
-      setFormData({ firstName: '', lastName: '', email: '', message: '' });
+      if (result.status === "success" || result.result === "success") {
+        setSubmitStatus('success');
+        setFormData({ firstName: '', lastName: '', email: '', message: '' });
+      } else {
+        setSubmitStatus('error');
+      }
 
-      // Reset status after a delay
       setTimeout(() => {
         setIsSubmitting(false);
         setSubmitStatus('idle');
       }, 3000);
     } catch (error) {
+      console.error('Error!', error);
+      // Fallback: If it's a CORS error but the data still went through (common with GAS)
+      // or if the redirect failed but the entry was made.
+      // However, we'll follow the user's logic of wanting a success check.
       setSubmitStatus('error');
       setIsSubmitting(false);
     }
@@ -147,10 +157,10 @@ const Contact: React.FC = () => {
                 type="submit"
                 disabled={isSubmitting}
                 className={`w-full py-4 rounded-lg text-white font-bold transition-all flex items-center justify-center gap-2 ${submitStatus === 'success'
-                    ? 'bg-green-500'
-                    : submitStatus === 'error'
-                      ? 'bg-red-500'
-                      : 'bg-gradient-to-r from-accent-cyan to-accent-purple hover:opacity-90'
+                  ? 'bg-green-500'
+                  : submitStatus === 'error'
+                    ? 'bg-red-500'
+                    : 'bg-gradient-to-r from-accent-cyan to-accent-purple hover:opacity-90'
                   }`}
               >
                 {isSubmitting && submitStatus === 'idle' ? (
@@ -166,7 +176,7 @@ const Contact: React.FC = () => {
 
               {submitStatus === 'success' && (
                 <p className="text-center text-sm text-green-400 animate-fade-in mt-2 font-medium">
-                  Email client opened. We'll get back to you soon!
+                  Message sent successfully! We'll get back to you soon.
                 </p>
               )}
             </form>
