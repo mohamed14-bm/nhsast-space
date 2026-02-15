@@ -22,6 +22,13 @@ const Navbar: React.FC = () => {
     setMobileMenuOpen(false);
   }, [location.pathname]);
 
+  // Global event to open menu
+  useEffect(() => {
+    const handleOpenMenu = () => setMobileMenuOpen(true);
+    window.addEventListener('open-mobile-menu', handleOpenMenu);
+    return () => window.removeEventListener('open-mobile-menu', handleOpenMenu);
+  }, []);
+
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
     if (mobileMenuOpen) {

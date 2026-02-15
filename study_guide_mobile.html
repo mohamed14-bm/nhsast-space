@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>NHSAST Study Guide Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0dccf2",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#101f22",
+                        "neon-purple": "#bc13fe",
+                        "neon-pink": "#ff14bd",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .engineering-grid {
+            background-size: 40px 40px;
+            background-image: 
+                linear-gradient(to right, rgba(13, 204, 242, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(13, 204, 242, 0.05) 1px, transparent 1px);
+        }
+        .glass-card {
+            background: rgba(16, 31, 34, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .neon-glow-cyan {
+            box-shadow: 0 0 15px rgba(13, 204, 242, 0.3);
+        }
+        .neon-glow-purple {
+            box-shadow: 0 0 15px rgba(188, 19, 254, 0.3);
+        }
+        .neon-glow-pink {
+            box-shadow: 0 0 15px rgba(255, 20, 189, 0.3);
+        }
+        .scroll-hide::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display min-h-screen relative overflow-x-hidden">
+<!-- Background Grid -->
+<div class="fixed inset-0 engineering-grid pointer-events-none z-0"></div>
+<!-- Sticky Glassmorphic Header -->
+<header class="fixed top-0 left-0 right-0 z-50 px-6 pt-12 pb-4 bg-background-dark/60 backdrop-blur-xl border-b border-white/5">
+<div class="flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-[10px] uppercase tracking-[0.2em] text-primary/60 font-bold">NHSAST Platform</span>
+<div class="flex items-center space-x-2 text-sm font-medium">
+<span class="text-white/40">CP1</span>
+<span class="material-icons text-xs text-white/20">chevron_right</span>
+<span class="text-primary">Analysis 1</span>
+</div>
+</div>
+<div class="flex items-center space-x-3">
+<button class="w-10 h-10 rounded-full glass-card flex items-center justify-center border-primary/20">
+<span class="material-icons text-primary text-xl">notifications_none</span>
+</button>
+<div class="w-10 h-10 rounded-full border-2 border-primary/40 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Student profile avatar portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDshBu5MVXvAKbzOP2VBMMsNpE4Rl07562YnkToOOkerGHv6WBJeG85MtGwT4K-iGwbqlb7d72sRJGgV-T0FJKKUGgjciX1fd0SiQII36tYOIXWwXYy_CpX6HvxMM50ipSPtXvZIKhFNjSZO9c8JoRK1ujSDStLI3WzgkrlYONf7Gpp9pOxE7uqPJ98jhLx7KokulbTjwD8fT1jT5HWNrmVBWduITjHByehWqyxsjqtHrFXarU1FFpc7IKN8XlsLvaWhjGj8L4-Gi3f"/>
+</div>
+</div>
+</div>
+</header>
+<main class="relative z-10 pt-32 pb-48 px-6 space-y-8 max-w-md mx-auto">
+<!-- Cycle Selection Section -->
+<section class="space-y-4">
+<div class="flex items-center justify-between">
+<h2 class="text-xs uppercase tracking-widest text-white/50 font-bold">Learning Cycles</h2>
+<span class="text-[10px] text-primary">View All</span>
+</div>
+<div class="flex flex-col space-y-3">
+<!-- AES Card -->
+<div class="glass-card rounded-xl p-4 flex items-center justify-between border-l-4 border-l-primary neon-glow-cyan">
+<div class="flex items-center space-x-4">
+<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
+<span class="material-icons text-primary">memory</span>
+</div>
+<div>
+<h3 class="font-bold text-lg">AES</h3>
+<p class="text-xs text-white/40">Applied Engineering Systems</p>
+</div>
+</div>
+<span class="material-icons text-primary/40">arrow_forward_ios</span>
+</div>
+<!-- RASD Card -->
+<div class="glass-card rounded-xl p-4 flex items-center justify-between border-l-4 border-l-neon-purple/80">
+<div class="flex items-center space-x-4">
+<div class="w-12 h-12 rounded-lg bg-neon-purple/10 flex items-center justify-center">
+<span class="material-icons text-neon-purple">robotics</span>
+</div>
+<div>
+<h3 class="font-bold text-lg text-white/90">RASD</h3>
+<p class="text-xs text-white/40">Robotic Analysis &amp; System Design</p>
+</div>
+</div>
+<span class="material-icons text-white/20">arrow_forward_ios</span>
+</div>
+<!-- USNC Card -->
+<div class="glass-card rounded-xl p-4 flex items-center justify-between border-l-4 border-l-neon-pink/80 opacity-60">
+<div class="flex items-center space-x-4">
+<div class="w-12 h-12 rounded-lg bg-neon-pink/10 flex items-center justify-center">
+<span class="material-icons text-neon-pink">biotech</span>
+</div>
+<div>
+<h3 class="font-bold text-lg text-white/90">USNC</h3>
+<p class="text-xs text-white/40">Unified Systems &amp; Nano Circuits</p>
+</div>
+</div>
+<span class="material-icons text-white/20">lock</span>
+</div>
+</div>
+</section>
+<!-- Module Grid -->
+<section class="space-y-4">
+<h2 class="text-xs uppercase tracking-widest text-white/50 font-bold">Active Modules</h2>
+<div class="grid grid-cols-2 gap-4">
+<!-- Physics Tile -->
+<div class="glass-card rounded-xl p-5 flex flex-col items-center text-center space-y-4">
+<div class="relative w-16 h-16 flex items-center justify-center">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-white/5" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-width="4"></circle>
+<circle class="text-primary drop-shadow-[0_0_8px_rgba(13,204,242,0.8)]" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-dasharray="175" stroke-dashoffset="40" stroke-width="4"></circle>
+</svg>
+<span class="absolute text-sm font-bold">82%</span>
+</div>
+<div>
+<h4 class="font-bold text-sm">Physics 101</h4>
+<p class="text-[10px] text-white/40">Quantum Mechanics</p>
+</div>
+</div>
+<!-- Analysis Tile -->
+<div class="glass-card rounded-xl p-5 flex flex-col items-center text-center space-y-4">
+<div class="relative w-16 h-16 flex items-center justify-center">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-white/5" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-width="4"></circle>
+<circle class="text-neon-purple drop-shadow-[0_0_8px_rgba(188,19,254,0.8)]" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-dasharray="175" stroke-dashoffset="100" stroke-width="4"></circle>
+</svg>
+<span class="absolute text-sm font-bold">45%</span>
+</div>
+<div>
+<h4 class="font-bold text-sm">Analysis 1</h4>
+<p class="text-[10px] text-white/40">Linear Algebra</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Resources Navigation -->
+<section class="space-y-4">
+<h2 class="text-xs uppercase tracking-widest text-white/50 font-bold">Learning Resources</h2>
+<div class="space-y-3">
+<button class="w-full glass-card rounded-xl p-4 flex items-center group active:scale-[0.98] transition-transform">
+<div class="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center mr-4">
+<span class="material-icons text-primary">auto_stories</span>
+</div>
+<div class="text-left flex-1">
+<h4 class="font-bold">Course Materials</h4>
+<p class="text-xs text-white/40">24 Interactive Lectures</p>
+</div>
+<span class="material-icons text-white/20 group-hover:text-primary transition-colors">download</span>
+</button>
+<button class="w-full glass-card rounded-xl p-4 flex items-center group active:scale-[0.98] transition-transform">
+<div class="w-10 h-10 rounded-lg bg-neon-purple/20 flex items-center justify-center mr-4">
+<span class="material-icons text-neon-purple">assignment</span>
+</div>
+<div class="text-left flex-1">
+<h4 class="font-bold">TD Exercises</h4>
+<p class="text-xs text-white/40">Practice Problem Sets</p>
+</div>
+<span class="material-icons text-white/20 group-hover:text-neon-purple transition-colors">arrow_forward</span>
+</button>
+<button class="w-full glass-card rounded-xl p-4 flex items-center group active:scale-[0.98] transition-transform">
+<div class="w-10 h-10 rounded-lg bg-neon-pink/20 flex items-center justify-center mr-4">
+<span class="material-icons text-neon-pink">history_edu</span>
+</div>
+<div class="text-left flex-1">
+<h4 class="font-bold">Exam Archives</h4>
+<p class="text-xs text-white/40">Past Papers 2021-2023</p>
+</div>
+<span class="material-icons text-white/20 group-hover:text-neon-pink transition-colors">verified</span>
+</button>
+</div>
+</section>
+</main>
+<!-- Retractable Grade Calculator Tray -->
+<div class="fixed bottom-0 left-0 right-0 z-50">
+<!-- Handle Overlay -->
+<div class="h-8 flex justify-center items-center cursor-pointer">
+<div class="w-12 h-1.5 bg-white/20 rounded-full"></div>
+</div>
+<!-- Tray Content -->
+<div class="glass-card border-t border-white/10 rounded-t-[2.5rem] px-8 pt-8 pb-10 shadow-[0_-20px_40px_rgba(0,0,0,0.5)]">
+<div class="flex items-center justify-between mb-8">
+<div>
+<h3 class="text-xl font-bold text-white">Grade Calculator</h3>
+<p class="text-sm text-primary">Simulate your outcome</p>
+</div>
+<div class="text-right">
+<span class="text-[10px] uppercase text-white/40">Projected GPA</span>
+<p class="text-2xl font-bold text-primary">3.8</p>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="text-[10px] uppercase tracking-wider text-white/50 block ml-1">TD Score /20</label>
+<div class="relative">
+<input class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-4 text-xl font-bold text-white focus:border-primary focus:ring-0 placeholder:text-white/10" placeholder="15.5" type="number"/>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 text-white/20">pts</span>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-[10px] uppercase tracking-wider text-white/50 block ml-1">Exam Score /20</label>
+<div class="relative">
+<input class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-4 text-xl font-bold text-white focus:border-neon-purple focus:ring-0 placeholder:text-white/10" placeholder="14.0" type="number"/>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 text-white/20">pts</span>
+</div>
+</div>
+</div>
+<button class="w-full bg-primary text-background-dark font-bold py-4 rounded-xl mt-8 flex items-center justify-center space-x-2 active:scale-95 transition-transform shadow-lg shadow-primary/20">
+<span class="material-icons">calculate</span>
+<span>CALCULATE FINAL GRADE</span>
+</button>
+</div>
+</div>
+<!-- Bottom iOS Tab Bar -->
+<nav class="fixed bottom-0 left-0 right-0 z-[60] h-20 bg-background-dark/80 backdrop-blur-2xl border-t border-white/5 px-8 flex items-center justify-between pointer-events-none">
+<button class="flex flex-col items-center pointer-events-auto text-primary">
+<span class="material-icons">dashboard</span>
+<span class="text-[10px] mt-1 font-bold">Home</span>
+</button>
+<button class="flex flex-col items-center pointer-events-auto text-white/40">
+<span class="material-icons">menu_book</span>
+<span class="text-[10px] mt-1">Study</span>
+</button>
+<div class="relative -mt-12 pointer-events-auto">
+<button class="w-14 h-14 bg-primary rounded-full flex items-center justify-center shadow-lg shadow-primary/40">
+<span class="material-icons text-background-dark text-3xl">add</span>
+</button>
+</div>
+<button class="flex flex-col items-center pointer-events-auto text-white/40">
+<span class="material-icons">leaderboard</span>
+<span class="text-[10px] mt-1">Stats</span>
+</button>
+<button class="flex flex-col items-center pointer-events-auto text-white/40">
+<span class="material-icons">settings</span>
+<span class="text-[10px] mt-1">Config</span>
+</button>
+</nav>
+</body></html>

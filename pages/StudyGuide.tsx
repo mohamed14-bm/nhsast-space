@@ -32,7 +32,8 @@ import {
   Globe,
   ExternalLink,
   MessageSquare,
-  Heart
+  Heart,
+  Menu
 } from 'lucide-react';
 
 // Types
@@ -524,9 +525,9 @@ const studyData: Record<CycleId, CycleData> = {
     label: 'Autonomous Embedded Systems',
     description: 'Design robust embedded systems for autonomous operation, focusing on firmware, sensors, and real-time processing.',
     advice: [
-      "Deep dive into C and C++. They are the language of the hardware.",
-      "Understand Real-Time Operating Systems (RTOS) thoroughly; timing is everything in autonomy.",
-      "Get comfortable with debugging low-level hardware issues using oscilloscopes and logic analyzers."
+      "Hardware Languages\n\nDeep dive into C and C++. They are the language of the hardware. Most autonomous systems rely on firmware that needs to be extremely efficient and close to the memory management. Don't just learn the syntax; understand pointers and memory allocation.",
+      "Timing is Everything\n\nUnderstand Real-Time Operating Systems (RTOS) thoroughly; timing is everything in autonomy. A delay of a few milliseconds in a sensor loop can cause a drone to crash. Practice with FreeRTOS or similar systems.",
+      "Low Level Debugging\n\nGet comfortable with debugging low-level hardware issues using oscilloscopes and logic analyzers. Software debugging is just one part; you need to see the signals on the wire to truly understand what's happening."
     ],
     semesters: [
       {
@@ -630,9 +631,9 @@ const studyData: Record<CycleId, CycleData> = {
     label: 'Robotics & Autonomous Systems Design',
     description: 'Master the design, modeling, and control of intelligent robotic agents, from manipulators to mobile robots.',
     advice: [
-      "Master Robot Kinematics and Dynamics; they are the foundation of all motion.",
-      "Get proficient with ROS (Robot Operating System) as soon as possible.",
-      "Matrix math and Linear Algebra are used daily in this specialty—keep them sharp."
+      "Physics Engine\n\nMaster Robot Kinematics and Dynamics; they are the foundation of all motion. You need to be able to predict where the end-effector will be based on joint angles (Forward Kinematics) and vice versa (Inverse Kinematics).",
+      "ROS Ecosystem\n\nGet proficient with ROS (Robot Operating System) as soon as possible. It is the industry standard for prototyping and deploying robotic applications. Start with ROS 2 and learn how nodes communicate.",
+      "Math is Your Tool\n\nMatrix math and Linear Algebra are used daily in this specialty—keep them sharp. Transformations, rotations (quaternions), and state estimation all rely heavily on linear algebra."
     ],
     semesters: [
       {
@@ -736,9 +737,9 @@ const studyData: Record<CycleId, CycleData> = {
     label: 'Unmanned Systems Nav & Control',
     description: 'Specialty dealing with the guidance, navigation, and control systems of UAVs and other unmanned vehicles.',
     advice: [
-      "Master PID and State-Space control early for flight stability.",
-      "Understand GPS and IMU sensor fusion (Kalman Filters) for reliable navigation.",
-      "Study aerodynamics to understand why your control algorithms work (or don't)."
+      "Stability First\n\nMaster PID and State-Space control early for flight stability. Tuning a controller is an art as much as a science; understand the contribution of each term to the system response.",
+      "Sensor Fusion\n\nUnderstand GPS and IMU sensor fusion (Kalman Filters) for reliable navigation. No sensor is perfect, so you must learn how to weigh their inputs based on uncertainty to get a clean state estimate.",
+      "Aerodynamic Constraints\n\nStudy aerodynamics to understand why your control algorithms work (or don't). Gravity, lift, drag, and thrust all play a role in how your autopilot should behave."
     ],
     semesters: [
       {
@@ -847,6 +848,11 @@ const StudyGuide: React.FC = () => {
   const [showResult, setShowResult] = useState(false);
   const [grades, setGrades] = useState<Record<string, { td: string; exam: string }>>({});
 
+  // Mobile/Layout Specific State
+  const [mobileTab, setMobileTab] = useState<'overview' | 'resources'>('overview');
+  const [cycleTab, setCycleTab] = useState<'semesters' | 'advice'>('semesters');
+  const [showMobileCalc, setShowMobileCalc] = useState(false);
+
   // Handle direct navigation from About page
   useEffect(() => {
     if (location.state) {
@@ -860,6 +866,7 @@ const StudyGuide: React.FC = () => {
       setSelectedSemester(null);
       setSelectedModule(null);
       setActiveResourceCategory(null);
+      setShowMobileCalc(false);
     }
   }, [location]);
 
@@ -869,6 +876,8 @@ const StudyGuide: React.FC = () => {
     setSelectedModule(null);
     setActiveResourceCategory(null);
     setShowAdvice(false);
+    setShowMobileCalc(false);
+    setCycleTab('semesters');
   };
 
   useEffect(() => {
@@ -906,6 +915,60 @@ const StudyGuide: React.FC = () => {
   };
 
   const activeData = getCurrentCycleData();
+
+  // Shared Grade Calculation Logic
+  const updateGrade = (moduleId: string, field: 'td' | 'exam', value: string) => {
+    if (value !== '' && !/^\d*\.?\d*$/.test(value)) return;
+    setGrades(prev => ({
+      ...prev,
+      [moduleId]: {
+        ...prev[moduleId],
+        [field]: value
+      }
+    }));
+    setShowResult(false);
+  };
+
+  const getAverageColor = (avg: number) => {
+    if (avg >= 14) return 'text-green-400';
+    if (avg >= 12) return 'text-accent-cyan';
+    if (avg >= 10) return 'text-yellow-400';
+    return 'text-red-400';
+  };
+
+  const getAverageBg = (avg: number) => {
+    if (avg >= 14) return 'bg-green-400/10 border-green-400/30';
+    if (avg >= 12) return 'bg-accent-cyan/10 border-accent-cyan/30';
+    if (avg >= 10) return 'bg-yellow-400/10 border-yellow-400/30';
+    return 'bg-red-400/10 border-red-400/30';
+  };
+
+  // Calculate average for selectedSemester
+  let average: number | null = null;
+  let allFilled = false;
+
+  if (selectedSemester) {
+    let totalWeighted = 0;
+    let totalCoeff = 0;
+    allFilled = true;
+
+    selectedSemester.modules.forEach(mod => {
+      const g = grades[mod.id];
+      const td = g?.td !== undefined && g.td !== '' ? parseFloat(g.td) : NaN;
+      const exam = g?.exam !== undefined && g.exam !== '' ? parseFloat(g.exam) : NaN;
+      if (isNaN(td) || isNaN(exam)) {
+        allFilled = false;
+      } else {
+        const moduleGrade = td * 0.4 + exam * 0.6;
+        totalWeighted += moduleGrade * mod.coeff;
+        totalCoeff += mod.coeff;
+      }
+    });
+
+    if (totalCoeff > 0 && allFilled) {
+      average = totalWeighted / totalCoeff;
+    }
+  }
 
 
   // Helper to determine icon based on module name
@@ -1073,8 +1136,9 @@ const StudyGuide: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {activeData.advice.map((tip, idx) => {
                 const parts = tip.split('\n\n');
-                const name = parts[0];
-                const content = parts.slice(1).join('\n\n');
+                const hasHeader = parts.length > 1;
+                const name = hasHeader ? parts[0] : "Expert Tip";
+                const content = hasHeader ? parts.slice(1).join('\n\n') : tip;
 
                 return (
                   <div key={idx} className="p-8 rounded-2xl bg-white/5 border border-white/5 hover:border-accent-cyan/30 transition-all flex flex-col gap-6">
@@ -1087,8 +1151,8 @@ const StudyGuide: React.FC = () => {
                       </div>
                     </div>
                     <div
-                      className="text-gray-300 text-[15px] leading-relaxed whitespace-pre-wrap font-arabic text-right"
-                      dir="rtl"
+                      className={`text-gray-300 text-[15px] leading-relaxed whitespace-pre-wrap ${content.length > 100 ? 'font-arabic text-right' : ''}`}
+                      dir={content.length > 100 ? 'rtl' : 'ltr'}
                     >
                       {content}
                     </div>
@@ -1107,54 +1171,8 @@ const StudyGuide: React.FC = () => {
 
     const modules = selectedSemester.modules;
 
-    const updateGrade = (moduleId: string, field: 'td' | 'exam', value: string) => {
-      if (value !== '' && !/^\d*\.?\d*$/.test(value)) return;
-      setGrades(prev => ({
-        ...prev,
-        [moduleId]: {
-          ...prev[moduleId],
-          [field]: value
-        }
-      }));
-      setShowResult(false);
-    };
-
     const handleCalculate = () => {
       setShowResult(true);
-    };
-
-    // Calculate average
-    let totalWeighted = 0;
-    let totalCoeff = 0;
-    let allFilled = true;
-
-    modules.forEach(mod => {
-      const g = grades[mod.id];
-      const td = g?.td !== undefined && g.td !== '' ? parseFloat(g.td) : NaN;
-      const exam = g?.exam !== undefined && g.exam !== '' ? parseFloat(g.exam) : NaN;
-      if (isNaN(td) || isNaN(exam)) {
-        allFilled = false;
-      } else {
-        const moduleGrade = td * 0.4 + exam * 0.6;
-        totalWeighted += moduleGrade * mod.coeff;
-        totalCoeff += mod.coeff;
-      }
-    });
-
-    const average = totalCoeff > 0 && allFilled ? totalWeighted / totalCoeff : null;
-
-    const getAverageColor = (avg: number) => {
-      if (avg >= 14) return 'text-green-400';
-      if (avg >= 12) return 'text-accent-cyan';
-      if (avg >= 10) return 'text-yellow-400';
-      return 'text-red-400';
-    };
-
-    const getAverageBg = (avg: number) => {
-      if (avg >= 14) return 'bg-green-400/10 border-green-400/30';
-      if (avg >= 12) return 'bg-accent-cyan/10 border-accent-cyan/30';
-      if (avg >= 10) return 'bg-yellow-400/10 border-yellow-400/30';
-      return 'bg-red-400/10 border-red-400/30';
     };
 
     return (
@@ -1462,154 +1480,558 @@ const StudyGuide: React.FC = () => {
     );
   };
 
-  return (
-    <div className="pt-32 pb-20 min-h-screen">
-      <div className="container mx-auto px-6">
-        {/* Header */}
-        <div className="max-w-4xl mb-12">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 bg-accent-purple/10 rounded-lg">
-              <GraduationCap className="text-accent-purple" size={24} />
+  const renderMobileView = () => {
+    const activeHeaderTitle = showMobileCalc
+      ? 'Grade Calculator'
+      : selectedModule
+        ? selectedModule.name
+        : showAdvice
+          ? 'Student Advice'
+          : selectedSemester
+            ? selectedSemester.title
+            : viewMode === 'prep'
+              ? 'Preparatory Cycle'
+              : activeSpecialty
+                ? studyData[activeSpecialty].label
+                : 'Engineering Specialties';
+
+    return (
+      <div className="pb-28 pt-24 min-h-screen bg-transparent px-4 relative overflow-x-hidden">
+        {/* Mobile Header */}
+        <div className="fixed top-0 left-0 w-full z-50 bg-black/60 backdrop-blur-xl border-b border-white/10 px-6 py-4 flex items-center justify-between shadow-lg shadow-black/40">
+          <div className="flex items-center gap-3 overflow-hidden">
+            {(selectedSemester || selectedModule || showAdvice || showMobileCalc || (viewMode === 'specs' && activeSpecialty)) ? (
+              <button
+                onClick={() => {
+                  if (showMobileCalc) setShowMobileCalc(false);
+                  else if (selectedModule) setSelectedModule(null);
+                  else if (showAdvice || cycleTab === 'advice') { setShowAdvice(false); setCycleTab('semesters'); }
+                  else if (selectedSemester) setSelectedSemester(null);
+                  else if (activeSpecialty) setActiveSpecialty(null);
+                }}
+                className="p-2 -ml-2 rounded-full hover:bg-white/10 active:scale-90 transition-all text-gray-300"
+              >
+                <ArrowLeft size={20} />
+              </button>
+            ) : (
+              <button
+                onClick={() => window.dispatchEvent(new CustomEvent('open-mobile-menu'))}
+                className="p-2 -ml-2 rounded-full hover:bg-white/10 active:scale-90 transition-all text-gray-300"
+              >
+                <Menu size={24} />
+              </button>
+            )}
+            <h1 className="text-lg font-bold text-white truncate font-display tracking-tight">
+              {activeHeaderTitle}
+            </h1>
+          </div>
+          {/* <button className="p-2 rounded-full bg-white/5 text-gray-400">
+            <Search size={20} />
+          </button> */}
+        </div>
+
+        {/* Main Content Area */}
+        <div className="animate-float-in">
+          {/* Level 1: Mode Selection (Hidden if navigated deeper) */}
+          {!selectedSemester && !activeSpecialty && viewMode === 'specs' && !showAdvice && !showMobileCalc && (
+            <div className="grid grid-cols-1 gap-4">
+              {['aes', 'rasd', 'usnc'].map((id) => {
+                const s = studyData[id as CycleId];
+                let Icon = Cpu;
+                if (id === 'rasd') Icon = Cog;
+                if (id === 'usnc') Icon = Plane;
+                return (
+                  <button key={id} onClick={() => handleSpecialtySelect(id as CycleId)} className="glass-panel p-6 rounded-2xl border border-white/5 flex items-center gap-4 hover:border-accent-cyan/50 active:scale-[0.98] transition-all text-left">
+                    <div className={`p-4 rounded-xl bg-${s.id === 'aes' ? 'accent-cyan' : s.id === 'rasd' ? 'accent-purple' : 'accent-pink'}/10 text-${s.id === 'aes' ? 'accent-cyan' : s.id === 'rasd' ? 'accent-purple' : 'accent-pink'}`}>
+                      <Icon size={28} />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-white">{s.label}</h3>
+                      <p className="text-xs text-gray-400 mt-1 line-clamp-2">{s.description}</p>
+                    </div>
+                  </button>
+                )
+              })}
             </div>
-            <span className="text-accent-purple font-bold tracking-wider uppercase text-sm">Academic Resources</span>
-          </div>
-          <h1 className="text-4xl md:text-5xl font-display font-bold mb-6">NHSAST <span className="text-gradient">Study Guide</span></h1>
-          <p className="text-gray-400 text-lg max-w-2xl">
-            Comprehensive curriculum resources for the Autonomous Systems specialties.
-          </p>
-        </div>
+          )}
 
-        {/* Top Level Navigation Tabs */}
-        <div className="flex flex-wrap gap-4 mb-8 border-b border-white/10 pb-1">
-          <button
-            onClick={() => handleViewModeChange('prep')}
-            className={`px-6 py-3 rounded-t-lg font-medium transition-all relative ${viewMode === 'prep'
-              ? 'text-white bg-white/5 border-t border-x border-white/10'
-              : 'text-gray-500 hover:text-white hover:bg-white/5'
-              }`}
-          >
-            Preparatory Cycle
-            {viewMode === 'prep' && <div className="absolute bottom-[-1px] left-0 w-full h-[1px] bg-space-900" />}
-          </button>
-          <button
-            onClick={() => handleViewModeChange('specs')}
-            className={`px-6 py-3 rounded-t-lg font-medium transition-all relative ${viewMode === 'specs'
-              ? 'text-white bg-white/5 border-t border-x border-white/10'
-              : 'text-gray-500 hover:text-white hover:bg-white/5'
-              }`}
-          >
-            Specialties
-            {viewMode === 'specs' && <div className="absolute bottom-[-1px] left-0 w-full h-[1px] bg-space-900" />}
-          </button>
-        </div>
-
-        {/* Navigation Breadcrumbs & Controls */}
-        <div className="mb-8 flex items-center justify-between flex-wrap gap-4">
-          <div className="flex items-center flex-wrap gap-2 text-sm bg-white/5 p-4 rounded-lg border border-white/10">
-            <button
-              onClick={() => {
-                if (viewMode === 'specs') {
-                  setActiveSpecialty(null);
-                }
-                resetSelection();
-              }}
-              className={`hover:text-accent-cyan transition-colors ${(viewMode === 'prep' && !selectedSemester && !showAdvice) || (viewMode === 'specs' && !activeSpecialty && !showAdvice)
-                ? 'text-accent-cyan font-bold'
-                : 'text-gray-400'
-                }`}
-            >
-              {viewMode === 'prep' ? 'Preparatory Cycle' : 'Specialties'}
-            </button>
-
-            {viewMode === 'specs' && activeSpecialty && (
-              <>
-                <ChevronRight size={14} className="text-gray-600" />
-                <button
-                  onClick={() => resetSelection()}
-                  className={`hover:text-accent-cyan transition-colors ${(!selectedSemester && !showAdvice) ? 'text-accent-cyan font-bold' : 'text-gray-400'}`}
-                >
-                  {studyData[activeSpecialty].label}
-                </button>
-              </>
-            )}
-
-            {selectedSemester && (
-              <>
-                <ChevronRight size={14} className="text-gray-600" />
-                <button
-                  onClick={() => setSelectedModule(null)}
-                  className={`hover:text-accent-cyan transition-colors ${!selectedModule ? 'text-accent-cyan font-bold' : 'text-gray-400'}`}
-                >
-                  {selectedSemester.title}
-                </button>
-              </>
-            )}
-
-            {showAdvice && (
-              <>
-                <ChevronRight size={14} className="text-gray-600" />
-                <span className="text-accent-cyan font-bold">
-                  Honest Advice
-                </span>
-              </>
-            )}
-
-
-            {selectedModule && (
-              <>
-                <ChevronRight size={14} className="text-gray-600" />
-                <span className="text-accent-cyan font-bold truncate max-w-[200px]">
-                  {selectedModule.name}
-                </span>
-              </>
-            )}
-          </div>
-
-          {/* Back Buttons for Mobile/Convenience */}
-          {(selectedSemester || selectedModule || showAdvice || (viewMode === 'specs' && activeSpecialty)) && (
-            <button
-              onClick={() => {
-                if (selectedModule) {
-                  setSelectedModule(null);
-                } else if (selectedSemester) {
-                  setSelectedSemester(null);
-                } else if (showAdvice) {
-                  setShowAdvice(false);
-                } else if (activeSpecialty) {
-                  setActiveSpecialty(null);
-                }
-              }}
-              className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors group"
-            >
-              <div className="p-2 bg-white/5 rounded-full group-hover:bg-white/10 transition-colors">
-                <ArrowLeft size={16} />
+          {/* Level 2: Section (Semesters / Advice) */}
+          {!selectedSemester && (viewMode === 'prep' || activeSpecialty) && activeData && !showMobileCalc && (
+            <div className="space-y-6">
+              <div className="glass-panel p-6 rounded-2xl border border-white/5 bg-gradient-to-br from-white/5 to-transparent mb-6">
+                <h2 className="text-2xl font-bold text-white mb-2">{activeData.label}</h2>
+                <p className="text-sm text-gray-400">{activeData.description}</p>
               </div>
-              <span>Back</span>
-            </button>
+
+              {/* Cycle Tabs Mobile */}
+              <div className="flex p-1.5 bg-black/40 rounded-2xl border border-white/10 mb-8 backdrop-blur-md relative">
+                {/* Sliding Indicator */}
+                <div
+                  className={`absolute top-1.5 bottom-1.5 w-[calc(50%-6px)] bg-accent-cyan rounded-xl transition-all duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] shadow-[0_0_15px_rgba(13,204,242,0.3)] ${cycleTab === 'semesters' ? 'left-1.5' : 'left-[calc(50%+3px)]'
+                    }`}
+                />
+
+                <button
+                  onClick={() => { setCycleTab('semesters'); setShowAdvice(false); }}
+                  className={`flex-1 py-3 text-sm font-bold rounded-xl transition-colors relative z-10 ${cycleTab === 'semesters' ? 'text-black' : 'text-gray-400 hover:text-white'
+                    }`}
+                >
+                  Semesters
+                </button>
+                <button
+                  onClick={() => { setCycleTab('advice'); setShowAdvice(true); }}
+                  className={`flex-1 py-3 text-sm font-bold rounded-xl transition-colors relative z-10 ${cycleTab === 'advice' ? 'text-black' : 'text-gray-400 hover:text-white'
+                    }`}
+                >
+                  Expert Advice
+                </button>
+              </div>
+
+              {cycleTab === 'semesters' ? (
+                <div className="space-y-3">
+                  <h3 className="text-sm font-bold text-gray-500 uppercase tracking-widest px-1">Choose Semester</h3>
+                  {activeData.semesters.map(sem => (
+                    <button
+                      key={sem.id}
+                      onClick={() => handleSemesterClick(sem)}
+                      className="w-full glass-panel p-5 rounded-2xl border border-white/5 hover:border-accent-purple/40 bg-gradient-to-br from-white/5 to-transparent flex items-center justify-between group active:scale-[0.98] transition-all relative overflow-hidden shadow-lg shadow-black/20"
+                    >
+                      <div className="absolute inset-0 bg-accent-purple/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      <div className="flex items-center gap-4 relative z-10">
+                        <div className="p-3.5 rounded-xl bg-white/5 text-gray-300 group-hover:text-accent-purple group-hover:bg-accent-purple/10 transition-colors">
+                          <Calendar size={22} />
+                        </div>
+                        <div className="text-left">
+                          <span className="block text-lg font-bold text-white group-hover:text-accent-purple transition-colors">{sem.title}</span>
+                          <span className="text-xs text-gray-500 font-medium tracking-wide">{sem.modules.length} Modules</span>
+                        </div>
+                      </div>
+                      <ChevronRight size={18} className="text-gray-600 group-hover:text-accent-purple group-hover:translate-x-1 transition-all relative z-10" />
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {(activeData.advice || []).map((tip, idx) => {
+                    const parts = tip.split('\n\n');
+                    const hasHeader = parts.length > 1;
+                    const name = hasHeader ? parts[0] : "Senior Tip";
+                    const content = hasHeader ? parts.slice(1).join('\n\n') : tip;
+                    return (
+                      <div key={idx} className="glass-panel p-6 rounded-2xl border border-white/5">
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="w-8 h-8 rounded-full bg-accent-cyan/20 flex items-center justify-center text-accent-cyan text-xs font-bold">
+                            {idx + 1}
+                          </div>
+                          <span className="font-bold text-accent-cyan text-sm">{name}</span>
+                        </div>
+                        <p className={`text-gray-300 text-sm leading-relaxed whitespace-pre-wrap ${content.length > 100 ? 'text-right font-arabic' : ''}`} dir={content.length > 100 ? 'rtl' : 'ltr'}>
+                          {content}
+                        </p>
+                      </div>
+                    )
+                  })}
+                  {(!activeData.advice || activeData.advice.length === 0) && (
+                    <div className="py-20 text-center glass-panel rounded-2xl border border-white/5 border-dashed">
+                      <Heart size={48} className="mx-auto text-gray-700 mb-4 opacity-20" />
+                      <p className="text-gray-500 italic text-sm">Advice for this section is coming soon!</p>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Level 3: Modules List */}
+          {selectedSemester && !selectedModule && !showMobileCalc && (
+            <div className="grid grid-cols-1 gap-3">
+              {selectedSemester.modules.map((mod) => (
+                <button
+                  key={mod.id}
+                  onClick={() => handleModuleClick(mod)}
+                  className="glass-panel p-5 rounded-xl border border-white/5 flex items-center gap-4 active:scale-[0.98] transition-all text-left"
+                >
+                  <div className="p-3 rounded-lg bg-accent-purple/10 text-accent-purple shrink-0">
+                    {getModuleIcon(mod.name)}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-bold text-white truncate">{mod.name}</h3>
+                    <div className="flex items-center gap-2 mt-1">
+                      <span className="text-[10px] font-bold bg-white/10 px-1.5 py-0.5 rounded text-gray-400">{mod.code || 'MOD'}</span>
+                      <span className="text-[10px] text-gray-500">Coeff: {mod.coeff}</span>
+                    </div>
+                  </div>
+                  <ChevronRight size={16} className="text-gray-600" />
+                </button>
+              ))}
+
+              {/* Quick Average Calc Button */}
+              <div className="mt-8 p-6 rounded-2xl bg-gradient-to-br from-accent-purple/20 to-transparent border border-accent-purple/30 text-center">
+                <Calculator className="mx-auto text-accent-purple mb-3" size={32} />
+                <h3 className="text-lg font-bold text-white mb-1">Calculate Average</h3>
+                <p className="text-xs text-gray-400 mb-4">Quickly check your semester performance</p>
+                <button
+                  onClick={() => setShowMobileCalc(true)}
+                  className="px-6 py-3 rounded-lg bg-accent-purple text-white text-sm font-bold shadow-lg shadow-accent-purple/20 active:scale-95 transition-all"
+                >
+                  Open Calculator
+                </button>
+                <p className="text-[10px] text-gray-500 mt-2">Enter grades to calculate instantly</p>
+              </div>
+            </div>
+          )}
+
+          {/* Mobile Calculator Overlay */}
+          {showMobileCalc && selectedSemester && (
+            <div className="space-y-6">
+              <div className="glass-panel p-5 rounded-xl border border-white/5 bg-accent-purple/5 mb-4">
+                <div className="flex justify-between items-center mb-2">
+                  <h3 className="font-bold text-white">Semester Average</h3>
+                  {average !== null && (
+                    <span className={`text-2xl font-bold ${getAverageColor(average)}`}>{average.toFixed(2)}</span>
+                  )}
+                </div>
+                <div className="w-full bg-white/10 rounded-full h-2 overflow-hidden">
+                  <div
+                    className={`h-full custom-progress-bar rounded-full ${average && average >= 10 ? 'bg-green-500' : 'bg-red-500'} transition-all duration-500`}
+                    style={{ width: `${Math.min((average || 0) / 20 * 100, 100)}%` }}
+                  />
+                </div>
+                <p className="text-[10px] text-gray-400 mt-2 text-center">
+                  {allFilled ? 'Calculation Complete' : 'Fill all grades to see result'}
+                </p>
+              </div>
+
+              <div className="space-y-3">
+                {selectedSemester.modules.map((mod) => {
+                  const g = grades[mod.id] || { td: '', exam: '' };
+                  const modGrade = (!isNaN(parseFloat(g.td)) && !isNaN(parseFloat(g.exam)))
+                    ? (parseFloat(g.td) * 0.4 + parseFloat(g.exam) * 0.6)
+                    : null;
+
+                  return (
+                    <div key={mod.id} className="glass-panel p-4 rounded-xl border border-white/5">
+                      <div className="flex justify-between items-start mb-3">
+                        <span className="font-bold text-white text-sm truncate max-w-[70%]">{mod.name}</span>
+                        <span className="text-[10px] bg-white/10 px-1.5 py-0.5 rounded text-gray-400">Coeff: {mod.coeff}</span>
+                      </div>
+                      <div className="grid grid-cols-3 gap-3 items-end">
+                        <div>
+                          <label className="block text-[10px] text-gray-500 mb-1">TD</label>
+                          <input
+                            type="number"
+                            inputMode="decimal"
+                            value={g.td}
+                            onChange={e => updateGrade(mod.id, 'td', e.target.value)}
+                            className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-center text-white text-sm font-bold focus:border-accent-cyan focus:bg-accent-cyan/5 focus:outline-none transition-all placeholder:text-gray-700"
+                            placeholder="--"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[10px] text-gray-500 mb-1">Exam</label>
+                          <input
+                            type="number"
+                            inputMode="decimal"
+                            value={g.exam}
+                            onChange={e => updateGrade(mod.id, 'exam', e.target.value)}
+                            className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-center text-white text-sm font-bold focus:border-accent-purple focus:bg-accent-purple/5 focus:outline-none transition-all placeholder:text-gray-700"
+                            placeholder="--"
+                          />
+                        </div>
+                        <div className="text-right">
+                          <span className="block text-[10px] text-gray-500 mb-1">Grade</span>
+                          <span className={`block text-lg font-bold ${modGrade !== null ? (modGrade >= 10 ? 'text-green-400' : 'text-red-400') : 'text-gray-600'}`}>
+                            {modGrade !== null ? modGrade.toFixed(2) : '--'}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="h-8" />
+            </div>
+          )}
+
+
+          {/* Level 4: Module Detail */}
+          {selectedModule && !showMobileCalc && (
+            <div className="space-y-6">
+              {/* Tabs */}
+              <div className="flex p-1 bg-white/5 rounded-xl border border-white/10 mb-6">
+                {(['overview', 'resources'] as const).map(tab => (
+                  <button
+                    key={tab}
+                    onClick={() => setMobileTab(tab)}
+                    className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all capitalize active:scale-95 ${mobileTab === tab ? 'bg-white/10 text-white shadow-sm' : 'text-gray-500'}`}
+                  >
+                    {tab}
+                  </button>
+                ))}
+              </div>
+
+              {mobileTab === 'overview' && (
+                <div className="glass-panel p-6 rounded-2xl border border-white/5 space-y-4">
+                  <div className="flex items-center gap-4">
+                    <div className="p-4 rounded-full bg-accent-cyan/10 text-accent-cyan">
+                      {getModuleIcon(selectedModule.name)}
+                    </div>
+                    <div>
+                      <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">Module</span>
+                      <h2 className="text-xl font-bold text-white leading-tight">{selectedModule.name}</h2>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4 py-4 border-y border-white/5">
+                    <div className="text-center">
+                      <span className="block text-2xl font-bold text-white">{selectedModule.coeff}</span>
+                      <span className="text-xs text-gray-500 uppercase tracking-widest">Coeff</span>
+                    </div>
+                    <div className="text-center border-l border-white/5">
+                      <span className="block text-2xl font-bold text-white">{selectedModule.credits}</span>
+                      <span className="text-xs text-gray-500 uppercase tracking-widest">Credits</span>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <h3 className="text-sm font-bold text-white">Objectives</h3>
+                    <p className="text-sm text-gray-400 leading-relaxed">
+                      {selectedModule.objectives || 'No detailed objectives available for this module yet.'}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {mobileTab === 'resources' && (
+                <div className="space-y-4">
+                  {['courses', 'tds', 'exams'].map(type => {
+                    const items = selectedModule.resources?.[type as keyof typeof selectedModule.resources];
+                    const icons = { courses: Library, tds: PenTool, exams: FileText };
+                    const Icon = icons[type as keyof typeof icons];
+                    return (
+                      <div key={type} className="glass-panel p-5 rounded-xl border border-white/5">
+                        <div className="flex items-center gap-3 mb-4">
+                          <Icon size={18} className="text-accent-cyan" />
+                          <h3 className="font-bold text-white capitalize">{type}</h3>
+                          <span className="text-xs text-gray-500 ml-auto">{items?.length || 0} items</span>
+                        </div>
+                        {items && items.length > 0 ? (
+                          <div className="space-y-2">
+                            {items.map((item, i) => (
+                              <a key={i} href={item.link} target="_blank" className="flex items-center justify-between p-3 rounded-lg bg-white/5 hover:bg-white/10 text-xs text-gray-300">
+                                <span className="truncate pr-4">{item.title}</span>
+                                <ExternalLink size={12} className="shrink-0" />
+                              </a>
+                            ))}
+                          </div>
+                        ) : (
+                          <p className="text-xs text-gray-600 italic">No resources available yet.</p>
+                        )}
+                      </div>
+                    )
+                  })}
+                  <a href={DRIVE_ROOT_URL} target="_blank" className="block p-4 rounded-xl bg-green-500/10 border border-green-500/20 text-center text-green-400 text-sm font-bold">
+                    Open Google Drive Folder
+                  </a>
+                </div>
+              )}
+
+
+            </div>
           )}
         </div>
 
-        {/* Main Interface Content */}
-        {viewMode === 'specs' && !activeSpecialty ? (
-          renderSpecialtySelection()
-        ) : !selectedSemester ? (
-          <>
-            {/* Optional header for the cycle/specialty */}
-            {(activeData) && (
-              <div className="mb-8 animate-float-in">
-                <h2 className="text-2xl font-bold mb-2">{activeData.label}</h2>
-                <p className="text-gray-400">{activeData.description}</p>
+        {/* Floating Dock */}
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-[340px] bg-black/80 backdrop-blur-xl border border-white/10 rounded-full shadow-[0_8px_32px_rgba(0,0,0,0.6)] flex items-center justify-between p-2.5 px-6 z-50">
+          <button
+            onClick={() => { setViewMode('prep'); handleViewModeChange('prep'); setShowAdvice(false); setShowMobileCalc(false); setCycleTab('semesters'); }}
+            className={`p-3 rounded-full transition-all active:scale-75 ${viewMode === 'prep' ? 'bg-accent-cyan text-black' : 'text-gray-400 hover:text-white'}`}
+          >
+            <BookOpen size={20} />
+          </button>
+
+          <div className="w-px h-6 bg-white/10"></div>
+
+          <button
+            onClick={() => { setViewMode('specs'); handleViewModeChange('specs'); setShowAdvice(false); setShowMobileCalc(false); setCycleTab('semesters'); }}
+            className={`p-3 rounded-full transition-all active:scale-75 ${viewMode === 'specs' ? 'bg-accent-cyan text-black' : 'text-gray-400 hover:text-white'}`}
+          >
+            <Cpu size={20} />
+          </button>
+
+          <div className="w-px h-6 bg-white/10"></div>
+
+          <button
+            onClick={() => {
+              if (selectedSemester) setShowMobileCalc(true);
+              else {
+                // Optional: Feedback if no semester selected
+              }
+            }}
+            className={`p-3 rounded-full transition-all active:scale-75 ${showMobileCalc ? 'bg-accent-purple text-white shadow-lg shadow-accent-purple/30' : 'text-gray-400 hover:text-white'}`}
+          >
+            <Calculator size={20} />
+          </button>
+        </div>
+      </div >
+    );
+  };
+
+  return (
+    <>
+      {/* Desktop View (Touched Only to Hide on Mobile) */}
+      <div className="hidden md:block pt-32 pb-20 min-h-screen">
+        <div className="container mx-auto px-6">
+          {/* Header */}
+          <div className="max-w-4xl mb-12">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2 bg-accent-purple/10 rounded-lg">
+                <GraduationCap className="text-accent-purple" size={24} />
               </div>
+              <span className="text-accent-purple font-bold tracking-wider uppercase text-sm">Academic Resources</span>
+            </div>
+            <h1 className="text-4xl md:text-5xl font-display font-bold mb-6">NHSAST <span className="text-gradient">Study Guide</span></h1>
+            <p className="text-gray-400 text-lg max-w-2xl">
+              Comprehensive curriculum resources for the Autonomous Systems specialties.
+            </p>
+          </div>
+
+          {/* Top Level Navigation Tabs */}
+          <div className="flex flex-wrap gap-4 mb-8 border-b border-white/10 pb-1">
+            <button
+              onClick={() => handleViewModeChange('prep')}
+              className={`px-6 py-3 rounded-t-lg font-medium transition-all relative ${viewMode === 'prep'
+                ? 'text-white bg-white/5 border-t border-x border-white/10'
+                : 'text-gray-500 hover:text-white hover:bg-white/5'
+                }`}
+            >
+              Preparatory Cycle
+              {viewMode === 'prep' && <div className="absolute bottom-[-1px] left-0 w-full h-[1px] bg-space-900" />}
+            </button>
+            <button
+              onClick={() => handleViewModeChange('specs')}
+              className={`px-6 py-3 rounded-t-lg font-medium transition-all relative ${viewMode === 'specs'
+                ? 'text-white bg-white/5 border-t border-x border-white/10'
+                : 'text-gray-500 hover:text-white hover:bg-white/5'
+                }`}
+            >
+              Specialties
+              {viewMode === 'specs' && <div className="absolute bottom-[-1px] left-0 w-full h-[1px] bg-space-900" />}
+            </button>
+          </div>
+
+          {/* Navigation Breadcrumbs & Controls */}
+          <div className="mb-8 flex items-center justify-between flex-wrap gap-4">
+            <div className="flex items-center flex-wrap gap-2 text-sm bg-white/5 p-4 rounded-lg border border-white/10">
+              <button
+                onClick={() => {
+                  if (viewMode === 'specs') {
+                    setActiveSpecialty(null);
+                  }
+                  resetSelection();
+                }}
+                className={`hover:text-accent-cyan transition-colors ${(viewMode === 'prep' && !selectedSemester && !showAdvice) || (viewMode === 'specs' && !activeSpecialty && !showAdvice)
+                  ? 'text-accent-cyan font-bold'
+                  : 'text-gray-400'
+                  }`}
+              >
+                {viewMode === 'prep' ? 'Preparatory Cycle' : 'Specialties'}
+              </button>
+
+              {viewMode === 'specs' && activeSpecialty && (
+                <>
+                  <ChevronRight size={14} className="text-gray-600" />
+                  <button
+                    onClick={() => resetSelection()}
+                    className={`hover:text-accent-cyan transition-colors ${(!selectedSemester && !showAdvice) ? 'text-accent-cyan font-bold' : 'text-gray-400'}`}
+                  >
+                    {studyData[activeSpecialty].label}
+                  </button>
+                </>
+              )}
+
+              {selectedSemester && (
+                <>
+                  <ChevronRight size={14} className="text-gray-600" />
+                  <button
+                    onClick={() => setSelectedModule(null)}
+                    className={`hover:text-accent-cyan transition-colors ${!selectedModule ? 'text-accent-cyan font-bold' : 'text-gray-400'}`}
+                  >
+                    {selectedSemester.title}
+                  </button>
+                </>
+              )}
+
+              {showAdvice && (
+                <>
+                  <ChevronRight size={14} className="text-gray-600" />
+                  <span className="text-accent-cyan font-bold">
+                    Honest Advice
+                  </span>
+                </>
+              )}
+
+
+              {selectedModule && (
+                <>
+                  <ChevronRight size={14} className="text-gray-600" />
+                  <span className="text-accent-cyan font-bold truncate max-w-[200px]">
+                    {selectedModule.name}
+                  </span>
+                </>
+              )}
+            </div>
+
+            {/* Back Buttons for Mobile/Convenience */}
+            {(selectedSemester || selectedModule || showAdvice || (viewMode === 'specs' && activeSpecialty)) && (
+              <button
+                onClick={() => {
+                  if (selectedModule) {
+                    setSelectedModule(null);
+                  } else if (selectedSemester) {
+                    setSelectedSemester(null);
+                  } else if (showAdvice) {
+                    setShowAdvice(false);
+                  } else if (activeSpecialty) {
+                    setActiveSpecialty(null);
+                  }
+                }}
+                className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors group"
+              >
+                <div className="p-2 bg-white/5 rounded-full group-hover:bg-white/10 transition-colors">
+                  <ArrowLeft size={16} />
+                </div>
+                <span>Back</span>
+              </button>
             )}
-            {renderSemesters()}
-          </>
-        ) : !selectedModule ? (
-          renderModules()
-        ) : (
-          renderResources()
-        )}
+          </div>
+
+          {/* Main Interface Content */}
+          {viewMode === 'specs' && !activeSpecialty ? (
+            renderSpecialtySelection()
+          ) : !selectedSemester ? (
+            <>
+              {/* Optional header for the cycle/specialty */}
+              {(activeData) && (
+                <div className="mb-8 animate-float-in">
+                  <h2 className="text-2xl font-bold mb-2">{activeData.label}</h2>
+                  <p className="text-gray-400">{activeData.description}</p>
+                </div>
+              )}
+              {renderSemesters()}
+            </>
+          ) : !selectedModule ? (
+            renderModules()
+          ) : (
+            renderResources()
+          )}
+        </div>
       </div>
-    </div>
+
+      {/* Mobile View (New Stitch Design) */}
+      <div className="block md:hidden">
+        {renderMobileView()}
+      </div>
+    </>
   );
 };
 

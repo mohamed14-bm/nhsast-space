@@ -23,15 +23,15 @@ const Footer: React.FC = () => {
       {/* Background decoration */}
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-accent-purple/5 rounded-full blur-[120px] translate-x-1/2 translate-y-1/2" />
 
-      <div className="container mx-auto px-6 relative z-10">
+      <div className="container mx-auto px-6 relative z-10 pb-20 md:pb-0">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           <div className="col-span-1 lg:col-span-2">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="p-2 rounded-lg bg-accent-cyan/10">
+            <Link to="/" className="flex items-center gap-3 mb-6 group w-fit">
+              <div className="p-2 rounded-lg bg-accent-cyan/10 group-hover:bg-accent-cyan/20 transition-colors">
                 <Rocket size={24} className="text-accent-cyan" />
               </div>
               <span className="font-display font-bold text-xl text-white">NHSAST Space</span>
-            </div>
+            </Link>
             <p className="text-gray-400 leading-relaxed max-w-md mb-8">
               Empowering the next generation of astronomers, engineers, and dreamers at NHSAST.
               We explore the cosmos through science, technology, and imagination.
