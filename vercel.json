@@ -1,0 +1,15 @@
+{
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "nhsast-space-test4-mcaj.vercel.app"
+        }
+      ],
+      "destination": "https://nhsast-space.vercel.app/$1",
+      "statusCode": 301
+    }
+  ]
+}

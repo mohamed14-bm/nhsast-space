@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background -->
+  <rect width="512" height="512" fill="#0B0C15"/>
+  
+  <!-- The Letter H (Serif Style) -->
+  <!-- Left Pillar -->
+  <path d="M120 100 L160 100 L160 412 L120 412 Z" fill="white"/>
+  <!-- Serif Top Left -->
+  <rect x="100" y="100" width="80" height="20" fill="white"/>
+  <!-- Serif Bottom Left -->
+  <rect x="100" y="392" width="80" height="20" fill="white"/>
+
+  <!-- Right Pillar -->
+  <path d="M352 100 L392 100 L392 412 L352 412 Z" fill="white"/>
+  <!-- Serif Top Right -->
+  <rect x="332" y="100" width="80" height="20" fill="white"/>
+  <!-- Serif Bottom Right -->
+  <rect x="332" y="392" width="80" height="20" fill="white"/>
+
+  <!-- Center "Drone" Crossbar -->
+  <!-- Central Hub -->
+  <circle cx="256" cy="256" r="15" fill="white"/>
+  
+  <!-- Arms (X shape) -->
+  <path d="M256 256 L196 196" stroke="white" stroke-width="8" stroke-linecap="round"/>
+  <path d="M256 256 L316 196" stroke="white" stroke-width="8" stroke-linecap="round"/>
+  <path d="M256 256 L196 316" stroke="white" stroke-width="8" stroke-linecap="round"/>
+  <path d="M256 256 L316 316" stroke="white" stroke-width="8" stroke-linecap="round"/>
+
+  <!-- Rotors (Circles at ends) -->
+  <circle cx="196" cy="196" r="12" fill="none" stroke="white" stroke-width="4"/>
+  <circle cx="316" cy="196" r="12" fill="none" stroke="white" stroke-width="4"/>
+  <circle cx="196" cy="316" r="12" fill="none" stroke="white" stroke-width="4"/>
+  <circle cx="316" cy="316" r="12" fill="none" stroke="white" stroke-width="4"/>
+  
+  <!-- Text Below -->
+  <text x="256" y="460" text-anchor="middle" fill="white" font-family="'Times New Roman', serif" font-weight="bold" font-size="42" letter-spacing="2">NHSAST</text>
+  <text x="256" y="495" text-anchor="middle" fill="white" font-family="'Times New Roman', serif" font-weight="bold" font-size="28" letter-spacing="6">SPACE</text>
+</svg>
